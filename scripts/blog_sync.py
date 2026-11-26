@@ -154,6 +154,10 @@ def page(tpl, title, desc, path, body, canonical=None, og_image=None):
 
 def render(lst):
     tpl = open(TPL, encoding='utf-8').read()
+    for p in lst:  # 목록 썸네일은 본문 첫 사진(postfiles)을 쓴다. blogthumb 주소는 큰 크기를 지원하지 않음
+        first = next((b['src'] for b in p.get('blocks') or [] if b['t'] == 'img'), None)
+        if first:
+            p['thumb'] = first.replace('?type=w966', '?type=w773')
     cards = []
     for p in lst:
         th = (f'<img src="{esc(p["thumb"])}" alt="" loading="lazy" referrerpolicy="no-referrer">' if p.get('thumb') else '<span class="bthumb-empty">SIKGOONS</span>')
