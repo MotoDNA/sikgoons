@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /_blog/
+Disallow: /scripts/
 
 Sitemap: https://sikgoons.kr/sitemap.xml
