@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://sikgoons.kr/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/about/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/contact/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/d6/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/sc/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/un/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/hj/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/np/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/by/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/d8/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/hd/</loc><lastmod>2026-11-26</lastmod></url>
-  <url><loc>https://sikgoons.kr/works/km/</loc><lastmod>2026-11-26</lastmod></url>
+  <url><loc>https://sikgoons.kr/</loc></url>
+  <url><loc>https://sikgoons.kr/works/</loc></url>
+  <url><loc>https://sikgoons.kr/about/</loc></url>
+  <url><loc>https://sikgoons.kr/contact/</loc></url>
+  <url><loc>https://sikgoons.kr/blog/</loc></url>
+  <url><loc>https://sikgoons.kr/works/by/</loc></url>
+  <url><loc>https://sikgoons.kr/works/d6/</loc></url>
+  <url><loc>https://sikgoons.kr/works/d8/</loc></url>
+  <url><loc>https://sikgoons.kr/works/hd/</loc></url>
+  <url><loc>https://sikgoons.kr/works/hj/</loc></url>
+  <url><loc>https://sikgoons.kr/works/km/</loc></url>
+  <url><loc>https://sikgoons.kr/works/np/</loc></url>
+  <url><loc>https://sikgoons.kr/works/sc/</loc></url>
+  <url><loc>https://sikgoons.kr/works/un/</loc></url>
 </urlset>
