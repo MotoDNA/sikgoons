@@ -235,6 +235,13 @@ body.dragging,body.dragging *{cursor:grabbing!important;user-select:none}
 .nav a[aria-current=page] .en,.nav a[aria-current=page] .ko,.nav a[aria-current=page] .dot{color:#1C1A18}
 #title .ten{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25em;letter-spacing:.06em;margin-right:10px;color:#8A7A62}
 @media(max-width:720px){.nav a .en{font-size:16px;min-width:0}.nav a .ko{flex:none}.nav a.sub{padding-left:12px}.nav a.sub .dot{display:none}}
+
+.reqwrap{padding:4px 14px 16px}
+.reqbtn{display:flex;align-items:center;justify-content:center;min-height:46px;border-radius:10px;background:#C9AE84;color:#1C1A18;font-size:14px;font-weight:700;letter-spacing:.04em;text-decoration:none;border:1px solid #C9AE84}
+.reqbtn:hover{background:#D8C29C}
+.reqbtn[aria-current=page]{background:#F1E3C4;border-color:#F1E3C4}
+.reqbtn:focus-visible{outline:2px solid #F1E3C4;outline-offset:2px}
+@media (max-width:720px){.reqwrap{padding:8px 8px 8px 0;display:flex;align-items:center}.reqbtn{min-height:38px;padding:0 14px;font-size:13px;white-space:nowrap}}
 </style>
 </head>
 <body>
@@ -260,6 +267,7 @@ body.dragging,body.dragging *{cursor:grabbing!important;user-select:none}
   <aside class="side">
     <div class="brand"><img src="img/logo-full-white.png" alt="SIKGOONS" class="lg"><b class="vh">SIKGOONS</b><span>홈페이지 관리자</span></div>
     <nav class="nav" id="nav" aria-label="관리 메뉴"></nav>
+    <div class="reqwrap"><a href="#request" class="reqbtn" id="reqBtn">자동수정요청</a></div>
     <div class="foot" id="sideFoot">연습 모드 · 이 브라우저에만 저장<br><a href="./" target="_blank" rel="noopener">홈페이지 새 창으로 보기 ↗</a></div>
   </aside>
 
@@ -357,7 +365,7 @@ var MENU=[
   ['alert','상담 알림','상담이 들어오면 카톡을 받을 번호',1],
   ['blog','블로그','네이버 블로그 글이 자동으로 올라와요',0,0,'Blog'],
   ['cap','SETTINGS · 설정'],
-  ['request','수정 요청','제작사에 디자인·기능 수정 요청하기',0,0,'Request'],
+  ['request','자동수정요청','디자인·기능 수정을 제작사(디엔에이랩스)에 요청하기'],
   ['pw','비밀번호 설정','관리자 비밀번호 바꾸기',0,0,'Password']
 ];
 /* 제작사 수정요청 접수 화면 (고객 전용 주소, 들어갈 때 비밀번호 필요) */
@@ -539,7 +547,7 @@ MENU=[
   ['alert','상담 알림','상담이 들어오면 카톡을 받을 번호',1],
   ['blog','블로그','네이버 블로그 글이 자동으로 올라와요',0,0,'Blog'],
   ['cap','SETTINGS · 설정'],
-  ['request','수정 요청','제작사에 디자인·기능 수정 요청하기',0,0,'Request'],
+  ['request','자동수정요청','디자인·기능 수정을 제작사(디엔에이랩스)에 요청하기'],
   ['pw','비밀번호 설정','관리자 비밀번호 바꾸기',0,0,'Password']
 ];
 var TXL={
@@ -787,8 +795,9 @@ V.pw=function(b){
 /* ---------- 그리기 ---------- */
 function navBadge(){var n=inb().filter(function(x){return !x.done;}).length,a=$('#nav a[href="#contact"] .badge');if(a){a.textContent=n;a.classList.toggle('hide',!n);}}
 function drawNav(){
-  $('#nav').innerHTML=MENU.map(function(m){if(m[0]==='cap')return '<div class="cap">'+m[1]+'</div>';
+  $('#nav').innerHTML=MENU.map(function(m){if(m[0]==='request')return '';if(m[0]==='cap')return '<div class="cap">'+m[1]+'</div>';
     return '<a href="#'+m[0]+'"'+(m[3]?' class="sub"':'')+(VIEW===m[0]?' aria-current="page"':'')+'>'+(m[5]?'<span class="en">'+m[5]+'</span>':'<span class="dot" aria-hidden="true">└</span>')+'<span class="ko">'+m[1]+'</span>'+(m[0]==='contact'?'<span class="badge hide">0</span>':'')+'</a>';}).join('');
+  var rb=$('#reqBtn');if(rb){if(VIEW==='request')rb.setAttribute('aria-current','page');else rb.removeAttribute('aria-current');}
   navBadge();
 }
 var LASTV='';
