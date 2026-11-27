@@ -306,7 +306,7 @@ var BLOG='https://blog.naver.com/ff9302';
 var SINGLE=true,IMG='/img/',BASE='/',ENDPOINT='',CLIENT='sikgoons',TEL='010-3832-5038',INSTA='https://www.instagram.com/sikgoons_main/';
 function L(v){return SINGLE?'':v+'-'}
 var HERO=['sc038','d6027','sc018','d6044'];
-var API_URL=/(^|\.)sikgoons\.kr$/.test(location.hostname)?'':'';
+var API_URL=/(^|\.)sikgoons\.kr$/.test(location.hostname)?'https://script.google.com/macros/s/AKfycbxi1bea57RokpSpamjC2OXRJJLgRlvF_7qSaTa19vJKIk7zy4RVwkNPA_TeewuG8s5zUw/exec':'';
 var PREVIEW=/[?&]preview/.test(location.search),FORCE=null;
 var HUB_URL='https://script.google.com/macros/s/AKfycbzqxtP6tYTGIsjLdH_TWFhisn2u77UIPDrqCHa7RwJcGDU7AWaCWap_P9B0H7u07sNa/exec',HUB_ID='sikgoons';
 var DEF={P:JSON.parse(JSON.stringify(P)),ORDER:ORDER.slice(),HERO:HERO.slice(),DIM:JSON.parse(JSON.stringify(DIM))};
@@ -466,6 +466,7 @@ function wire(root){
  var cl=root.querySelector('.c-list');if(cl){var pics=root.querySelectorAll('.c-pic img'),lb=root.querySelector('#clbl');cl.querySelectorAll('a').forEach(function(a){function on(){cl.querySelectorAll('a').forEach(function(x){x.classList.toggle('on',x===a)});pics.forEach(function(p){p.classList.toggle('on',p.dataset.k===a.dataset.k)});lb.textContent=P[a.dataset.k].title}a.addEventListener('mouseenter',on);a.addEventListener('focus',on)})}
  root.querySelectorAll('[data-arc]').forEach(function(t){var tb=t.nextElementSibling;t.querySelectorAll('button').forEach(function(b){b.addEventListener('click',function(){t.querySelectorAll('button').forEach(function(x){x.classList.toggle('on',x===b)});var f=b.dataset.f;tb.querySelectorAll('tr').forEach(function(r){var ok=f==='all'||r.dataset.r===f||r.dataset.y===f;r.hidden=!ok||(f==='all'&&r.hasAttribute('data-more'))})})})});
 }
+if(PREVIEW)document.addEventListener('click',function(e){var a=e.target.closest('a[href]');if(!a||a.target==='_blank')return;var h=a.getAttribute('href');if(!SINGLE||h.indexOf(BASE)!==0)return;e.preventDefault();var p=h.slice(BASE.length).replace(/\/$/,''),s=p.split('/');FORCE=s[0]==='works'&&s[1]?s[1]:(s[0]||'home');render()},true);
 var pop=document.getElementById('pop');
 var zv=document.createElement('div');zv.className='zv';zv.setAttribute('role','dialog');zv.setAttribute('aria-modal','true');zv.setAttribute('aria-label','사진 크게 보기');
 zv.innerHTML='<img alt=""><button class="zx" aria-label="닫기">×</button><button class="zp" aria-label="이전 사진">‹</button><button class="zn" aria-label="다음 사진">›</button><div class="zc"></div>';document.body.appendChild(zv);

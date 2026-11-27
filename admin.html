@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>식군스 홈페이지 관리자</title>
+<link rel="icon" type="image/png" href="img/logo-mark-dark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&family=Noto+Serif+KR:wght@400&display=swap">
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:'Noto Sans KR',sans-serif;font-size:15px;color:#1C1A18;background:#F4F2EE;-webkit-text-size-adjust:100%}
+button,input,textarea,select{font:inherit;color:inherit}
+a{color:inherit}
+.hide{display:none!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* 로그인 */
+.login{min-height:100%;display:flex;align-items:center;justify-content:center;padding:24px}
+.login .box{width:100%;max-width:420px;background:#FFF;border:1px solid #E2DDD5;border-radius:14px;padding:36px 32px}
+.login h1{margin:0;font-family:'Noto Serif KR',serif;font-weight:400;font-size:26px;letter-spacing:.06em}
+.login p{margin:10px 0 0;color:#6B6358;line-height:1.7;font-size:14px}
+.note{margin-top:20px;padding:14px 16px;background:#FBF3E6;border-radius:10px;color:#6A4B12;font-size:13px;line-height:1.7}
+
+/* 틀 */
+.app{display:grid;grid-template-columns:232px minmax(0,1fr) minmax(0,46%);height:100vh}
+.side{background:#1C1A18;color:#E8E4DD;display:flex;flex-direction:column;overflow:auto}
+.side .brand{padding:22px 22px 18px;border-bottom:1px solid #34302C}
+.side .brand b{display:block;font-family:'Noto Serif KR',serif;font-weight:400;font-size:18px;letter-spacing:.14em}
+.side .brand span{font-size:12px;color:#A39A8E}
+.nav{padding:12px 10px;flex:1}
+.nav .cap{margin:14px 12px 6px;font-size:11px;letter-spacing:.14em;color:#8A8177}
+.nav a{display:flex;align-items:center;justify-content:space-between;gap:8px;min-height:42px;padding:0 12px;border-radius:8px;text-decoration:none;font-size:14px;letter-spacing:.04em;color:#D9D3CA}
+.nav a:hover{background:#2B2825}
+.nav a[aria-current=page]{background:#F1E3C4;color:#1C1A18}
+.nav .badge{min-width:22px;height:22px;padding:0 7px;border-radius:11px;background:#E8730C;color:#FFF;font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+.side .foot{padding:16px 22px;font-size:12px;color:#8A8177;border-top:1px solid #34302C;line-height:1.7}
+.side .foot a{color:#D9D3CA}
+
+.main{display:flex;flex-direction:column;min-height:0;min-width:0}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 28px 14px;border-bottom:1px solid #E2DDD5;background:#F4F2EE}
+.top h2{margin:0;font-size:20px;font-weight:500}
+.top .sub{margin:4px 0 0;font-size:13px;color:#6B6358}
+.mprev{display:none}
+.body{flex:1;overflow:auto;padding:22px 28px 120px}
+.card{background:#FFF;border:1px solid #E2DDD5;border-radius:12px;padding:20px 22px;margin-bottom:16px}
+.card h3{margin:0 0 4px;font-size:16px;font-weight:500}
+.card .hint{margin:0 0 14px;font-size:13px;color:#6B6358;line-height:1.6}
+.f{margin-top:14px}
+.f:first-of-type{margin-top:0}
+.f label{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:#4A453F;margin-bottom:6px}
+.f label .chg{font-size:12px;color:#B45A08}
+input[type=text],input[type=password],input[type=url],input[type=tel],input[type=email],textarea,select{width:100%;min-height:44px;padding:10px 12px;border:1px solid #D6D0C6;border-radius:8px;background:#FFF;font-size:15px;line-height:1.6}
+textarea{resize:vertical;min-height:88px}
+input:focus,textarea:focus,select:focus{outline:2px solid #C9AE84;outline-offset:1px;border-color:#C9AE84}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;min-height:40px;padding:0 16px;border:1px solid #CFC7BB;border-radius:8px;background:#FFF;cursor:pointer;font-size:14px;white-space:nowrap}
+.btn:hover{background:#F4F2EE}
+.btn.pri{background:#1C1A18;border-color:#1C1A18;color:#FFF}
+.btn.pri:hover{background:#3A3632}
+.btn.sm{min-height:34px;padding:0 10px;font-size:13px}
+.btn.del{color:#A3261B}
+.btn.link{border:0;background:none;padding:0 4px;min-height:32px;color:#6B6358;text-decoration:underline;font-size:12px}
+.btn:disabled{opacity:.45;cursor:default}
+.btn:focus-visible,.nav a:focus-visible{outline:2px solid #C9AE84;outline-offset:2px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.row>div:first-child:not(.seg){min-width:0;flex:1 1 220px}
+.main,.body,.card{min-width:0}
+.list{display:flex;flex-direction:column;gap:10px}
+.li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start;padding:12px;border:1px solid #E7E2DA;border-radius:10px;background:#FBFAF8}
+.li .flds{display:grid;gap:8px}
+.li .ctl{display:flex;flex-direction:column;gap:6px}
+.wk{display:grid;grid-template-columns:22px 40px minmax(120px,200px) minmax(0,1fr);gap:12px;align-items:center;padding:12px;border:1px solid #E7E2DA;border-radius:10px;background:#FBFAF8}
+.wk .mv{display:flex;flex-direction:column;gap:6px}
+.wk .mv .btn{width:40px;padding:0}
+.wk img{width:100%;aspect-ratio:3/2;height:auto;object-fit:cover;border-radius:8px;background:#E2DDD5;display:block}
+.wk .nm{font-weight:500;font-size:16px}
+.wk .meta{font-size:13px;color:#6B6358;margin-top:4px;line-height:1.6}
+.wk .ctl{display:flex;gap:6px;margin-top:10px}
+.cover{display:flex;gap:16px;align-items:flex-end;flex-wrap:wrap}
+.cover img{width:220px;max-width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:8px;background:#E2DDD5}
+.hsl{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.hsr{display:flex;align-items:center;gap:10px;border:1px solid #E7E2DA;border-radius:8px;padding:8px;background:#FBFAF8}
+.hsr .no{flex:none;width:26px;height:26px;border-radius:50%;background:#1C1A18;color:#FFF;font-size:12px;display:flex;align-items:center;justify-content:center}
+.hsr .ctl{flex:none;display:flex;gap:4px;margin-left:auto}
+.hsp{display:flex;gap:6px;flex:1 1 auto;min-width:0}
+.hsp figure{margin:0;flex:1 1 0;min-width:0;max-width:150px}
+.hsp img{display:block;width:100%;aspect-ratio:3/2;object-fit:cover;border-radius:4px;background:#EEE9E1}
+.hsp figcaption{font-size:11px;color:#8A8278;margin-top:2px}
+.hsf{position:relative}
+.hsf .hsact{position:absolute;top:4px;right:4px;display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.hsf:hover .hsact,.hsf:focus-within .hsact{opacity:1}
+@media (hover:none){.hsf .hsact{opacity:1}}
+.hsact button{width:30px;height:30px;border:0;border-radius:6px;background:rgba(255,255,255,.94);box-shadow:0 1px 4px rgba(0,0,0,.25);cursor:pointer;display:grid;place-items:center;padding:0;color:#1C1A18}
+.hsact button:hover{background:#fff}.hsact button.del:hover{color:#B3261E}
+.hsact svg{width:16px;height:16px}
+.hsf.vac .hsup{display:flex;align-items:center;justify-content:center;width:100%;aspect-ratio:3/2;border:1.5px dashed #B9AFA2;border-radius:4px;background:#F6F3EE;color:#5C554D;font:inherit;font-size:13px;cursor:pointer}
+.hsf.vac .hsup:hover{border-color:#1C1A18;color:#1C1A18;background:#FFF}
+.hsr.miss{border-color:#E7B8B2;background:#FDF6F5}
+.hsr .warn{display:block;font-size:11px;color:#B3261E;margin-top:4px}
+.pe1{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+.pe1 .it{position:relative;border:1px solid #E7E2DA;border-radius:8px;overflow:hidden;background:#FBFAF8}
+.pe1 figure{margin:0}.pe1 img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.pe1 .n{position:absolute;left:6px;top:6px;z-index:1;background:rgba(0,0,0,.6);color:#FFF;font-size:11px;padding:2px 7px;border-radius:10px}
+.pe1 .mv{display:flex;justify-content:space-between;padding:2px 4px}
+.pe1 .mv button{min-width:36px;min-height:32px;border:0;background:none;cursor:pointer;border-radius:6px;font-size:13px}
+.pe1 .mv button:hover{background:#EEE9E1}.pe1 .mv button:disabled{opacity:.25;cursor:default}
+.grip{flex:none;display:inline-flex;align-items:center;justify-content:center;width:22px;height:34px;color:#A79E92;font-size:15px;letter-spacing:-3px;cursor:grab;touch-action:none;user-select:none;border-radius:4px}
+.grip:hover{color:#1C1A18;background:#EEE9E1}
+.hsr,.pe1 .it,.list .wk{cursor:grab}.hsr button,.hsr input,.pe1 button,.list .wk button{cursor:pointer}
+.drag{opacity:.55;box-shadow:0 6px 18px rgba(0,0,0,.18);outline:2px dashed #C9A97A;outline-offset:2px}
+body.dragging,body.dragging *{cursor:grabbing!important;user-select:none}
+.pe1 .grip{position:absolute;left:4px;bottom:2px;z-index:1;width:28px;height:30px}
+.hsr .note{display:block;font-size:11px;color:#8A6D3B;margin-top:4px}
+.peln{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;color:#6B6358;white-space:nowrap}
+.peln select{height:34px;min-width:0;flex:1 1 auto;max-width:260px;padding:0 8px;border:1px solid #D9D2C7;border-radius:6px;font:inherit;font-size:13px;color:#1C1A18;background:#FFF}
+.pelb{margin-top:6px;width:100%;max-width:306px;height:34px;padding:0 10px;border:1px solid #D9D2C7;border-radius:6px;font:inherit;font-size:13px}
+.hsg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:10px}
+.hsa{border:1px solid #E7E2DA;border-radius:8px;background:#FBFAF8;padding:8px}
+.hsa .act{display:flex;gap:6px;margin-top:8px}.hsa .act .btn{flex:1}
+.hsn{flex:0 0 180px;width:180px;display:flex;flex-direction:column;align-items:flex-start}.hsn .box{aspect-ratio:3/2;border:1px dashed #CFC7BB;border-radius:6px;display:flex;align-items:center;justify-content:center;overflow:hidden;margin-bottom:8px;color:#8A8278;font-size:13px;background:#FBFAF8}
+.hsn .box img{width:100%;height:100%;object-fit:cover}
+@media (max-width:560px){.hsr{flex-wrap:wrap}.hsr .ctl{margin-left:36px}}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(132px,1fr));gap:10px}
+.gal .g{position:relative;border:1px solid #E7E2DA;border-radius:8px;overflow:hidden;background:#FBFAF8}
+.gal .g img{display:block;width:100%;aspect-ratio:1;object-fit:cover}
+.gal .g .n{position:absolute;left:6px;top:6px;background:rgba(0,0,0,.6);color:#FFF;font-size:11px;padding:2px 7px;border-radius:10px}
+.gal .g .ctl{display:flex;justify-content:space-between;padding:4px}
+.gal .g .ctl button{min-width:34px;min-height:34px;border:0;background:none;cursor:pointer;border-radius:6px;font-size:14px}
+.gal .g .ctl button:hover{background:#EEE9E1}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
+.stat{background:#FFF;border:1px solid #E2DDD5;border-radius:12px;padding:16px 18px}
+.stat b{display:block;font-size:26px;font-weight:500}
+.stat span{font-size:13px;color:#6B6358}
+.hist{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:10px 0;border-top:1px solid #EEE9E1;font-size:14px}
+.hist:first-child{border-top:0}
+.inb{border:1px solid #E7E2DA;border-radius:10px;padding:14px 16px;background:#FBFAF8}
+.inb.done{opacity:.6}
+.inb .h{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.inb .h b{font-size:16px;font-weight:500}
+.inb dl{margin:10px 0 0;display:grid;grid-template-columns:max-content minmax(0,1fr);gap:4px 10px;font-size:14px}
+.inb dt{color:#6B6358;white-space:nowrap}
+.inb dd{margin:0;overflow-wrap:anywhere;white-space:pre-line}
+.inb dd a.att{display:inline-flex;align-items:center;gap:6px;padding:4px 12px;border:1px solid #9C7A4E;border-radius:999px;color:#7A5C36;text-decoration:none;font-size:13px}
+.inb dd a.att:hover{background:#9C7A4E;color:#fff}
+.chk{display:inline-flex;align-items:center;gap:8px;min-height:40px;font-size:14px;cursor:pointer}
+.chk input{width:18px;height:18px}
+.empty{padding:22px;text-align:center;color:#6B6358;font-size:14px;border:1px dashed #D6D0C6;border-radius:10px}
+.where{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#6B6358;background:#F4F2EE;border-radius:12px;padding:3px 10px;margin:0 6px 6px 0;cursor:pointer;border:0}
+.where:hover{background:#EEE6D8}
+
+/* 저장 막대 */
+.savebar{position:sticky;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 28px;background:#FFF;border-top:1px solid #E2DDD5;box-shadow:0 -4px 16px rgba(0,0,0,.04)}
+.savebar .st{font-size:14px;color:#6B6358}
+.savebar.dirty .st{color:#B45A08;font-weight:500}
+.savebar .row{flex-wrap:nowrap}
+.err{margin-top:10px;padding:12px 14px;border-radius:8px;background:#FCEBEB;color:#791F1F;font-size:13px;line-height:1.6}
+.toast{position:fixed;left:50%;bottom:84px;transform:translateX(-50%) translateY(20px);background:#1C1A18;color:#FFF;padding:12px 18px;border-radius:10px;font-size:14px;opacity:0;transition:.3s;pointer-events:none;z-index:50}
+.toast.on{opacity:1;transform:translateX(-50%)}
+
+/* 미리보기 */
+.prev{display:flex;flex-direction:column;border-left:1px solid #E2DDD5;background:#E9E5DE;min-width:0}
+.prev .ph{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:12px 16px;background:#F4F2EE;border-bottom:1px solid #E2DDD5;flex-wrap:wrap}
+.prev .ph b{font-size:14px;font-weight:500}
+.seg{display:inline-flex;border:1px solid #CFC7BB;border-radius:8px;overflow:hidden}
+.seg button{border:0;background:#FFF;min-height:32px;padding:0 10px;font-size:13px;cursor:pointer}
+.seg button[aria-pressed=true]{background:#1C1A18;color:#FFF}
+.frame{flex:1;position:relative;overflow:hidden}
+.frame .fit{position:absolute;left:0;top:0;transform-origin:0 0}
+.frame iframe{border:0;background:#FFF;display:block}
+.frame.mob .fit{left:50%}
+.prev .close{display:none}
+
+@media (max-width:1100px){
+  .app{grid-template-columns:200px minmax(0,1fr)}
+  .prev{position:fixed;inset:0;z-index:40;display:none}
+  .prev.open{display:flex}
+  .prev .close{display:inline-flex}
+  .mprev{display:inline-flex}
+}
+@media (max-width:720px){
+  .app{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);height:100vh}
+  .top{flex-wrap:wrap}
+  .savebar .row{flex-wrap:wrap}
+  .side{flex-direction:row;overflow:visible}
+  .side .brand,.side .foot,.nav .cap{display:none}
+  .nav{display:flex;overflow-x:auto;padding:8px;gap:4px;flex:1}
+  .nav a{flex:none}
+  .top{padding:14px 16px 10px}
+  .body{padding:16px 16px 120px}
+  .savebar{padding:10px 16px;flex-wrap:wrap}
+  .wk{grid-template-columns:22px 40px minmax(0,1fr);gap:10px}
+  .wk .tx{grid-column:2/-1}
+  .li{grid-template-columns:1fr}
+  .li .ctl{flex-direction:row}
+}
+.hpg{display:grid;flex:none;width:max-content;}
+.hpos .row>div.hpg:first-child{flex:0 0 auto;width:max-content;min-width:0}
+.hpg{grid-template-columns:repeat(3,44px);grid-template-rows:repeat(3,30px);gap:4px;padding:8px;border:1px solid #E7E2DA;border-radius:8px;background:linear-gradient(#5b5650,#3d3934)}
+.hpg button{border:0;border-radius:4px;background:rgba(255,255,255,.08);cursor:pointer;display:grid;place-items:center;padding:0}
+.hpg button i{width:18px;height:4px;border-radius:2px;background:rgba(255,255,255,.45)}
+.hpg button:hover{background:rgba(255,255,255,.18)}
+.hpg button[aria-pressed="true"]{background:rgba(255,255,255,.9)}.hpg button[aria-pressed="true"] i{background:#1C1A18}
+.hps{display:flex;align-items:center;gap:10px;margin-bottom:8px}.hps span{width:32px;font-size:13px;color:#6B645C}.hps input{flex:1}.hps b{min-width:52px;font-size:14px}
+
+/* 식군스 */
+.glist{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.gi{background:#FFF;border:1px solid #E2DDD5;border-radius:10px;overflow:hidden}
+.gi .th{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;background:#EEE}
+.gc{display:flex;align-items:center;gap:4px;padding:6px}.gc span{font-size:12px;color:#6B6358;margin-right:auto;padding-left:4px}
+.gc .btn.sm{min-height:34px;padding:0 9px}
+.wrow{display:flex;align-items:center;gap:12px}.wrow.off{opacity:.55}
+.wt{width:64px;height:64px;object-fit:cover;border-radius:6px;flex:0 0 auto;background:#EEE}
+.wn{flex:1;min-width:0}.wn b{font-weight:500}.wn span{font-size:13px;color:#6B6358}
+.tag{display:inline-block;font-size:11px;background:#FBF3E6;color:#6A4B12;border-radius:20px;padding:2px 8px}
+.pslots{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pslot .pl{font-weight:500;margin-bottom:8px}
+.pbig{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;background:#EEE}
+.pbig.empty{display:grid;place-items:center;color:#8A8277;font-size:13px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+@media(max-width:640px){.pslots,.grid2{grid-template-columns:1fr}.wrow{flex-wrap:wrap}.wrow .ctl{width:100%}}
+</style>
+</head>
+<body>
+
+<div class="login" id="login">
+  <div class="box">
+    <h1>SIKGOONS</h1>
+    <p>홈페이지 관리자</p>
+    <div class="note" id="loginNote"><b>시안 단계 연습 모드</b><br>지금 고친 내용은 이 기기의 브라우저에만 저장되고, 같은 브라우저로 연 시안 페이지에 바로 나타납니다. 실제 홈페이지를 열면 비밀번호로 로그인하고, 저장한 내용이 모든 방문자에게 보입니다.</div>
+    <form id="pwForm" novalidate style="margin-top:22px">
+      <p id="pwMsg" style="margin:0 0 4px;color:#1C1A18;font-size:15px">비밀번호를 입력해 주세요.</p>
+      <div class="f"><label for="pw1" id="pw1L">비밀번호</label><div style="position:relative"><input type="password" id="pw1" autocomplete="current-password" autocapitalize="off" autocorrect="off" spellcheck="false" lang="en" inputmode="latin" style="width:100%;padding-right:64px"><button type="button" id="pwEye" aria-label="비밀번호 보기" aria-pressed="false" style="position:absolute;right:4px;top:50%;transform:translateY(-50%);min-height:40px;padding:0 10px;border:0;background:none;color:#6B6358;font-size:13px;cursor:pointer">보기</button></div><p id="pwHan" role="status" hidden style="margin:8px 0 0;color:#B42318;font-size:13px">한글로 입력되고 있어요. 한/영 키를 눌러 영어로 바꾼 뒤 다시 입력해 주세요.</p></div>
+      <div class="f" id="pw2Row" hidden><label for="pw2">비밀번호 한 번 더</label><input type="password" id="pw2" autocomplete="new-password" style="width:100%"></div>
+      <p id="pwErr" role="alert" style="margin:10px 0 0;color:#B42318;font-size:13px"></p>
+      <button class="btn pri" id="enter" type="submit" style="margin-top:14px;width:100%;min-height:48px">관리자 페이지 들어가기</button>
+      <p style="margin:12px 0 0;font-size:12px;color:#8A8277">비밀번호를 잊으셨으면 제작사(디엔에이랩스)에 연락해 주세요.</p>
+    </form>
+    <p style="margin-top:14px;text-align:center"><a href="./">← 홈페이지로</a></p>
+  </div>
+</div>
+
+<div class="app hide" id="app">
+  <aside class="side">
+    <div class="brand"><b>SIKGOONS</b><span>홈페이지 관리자</span></div>
+    <nav class="nav" id="nav" aria-label="관리 메뉴"></nav>
+    <div class="foot" id="sideFoot">연습 모드 · 이 브라우저에만 저장<br><a href="./" target="_blank" rel="noopener">홈페이지 새 창으로 보기 ↗</a></div>
+  </aside>
+
+  <section class="main">
+    <div class="top">
+      <div><h2 id="title">한눈에 보기</h2><p class="sub" id="sub"></p></div>
+      <button class="btn mprev" type="button" id="openPrev">홈페이지 미리보기</button>
+    </div>
+    <div class="body" id="body"></div>
+    <div class="savebar" data-sec="all" id="savebar">
+      <span class="st" id="saveState">바꾼 내용 없음</span>
+      <div class="row">
+        <button class="btn" type="button" id="undo">되돌리기</button>
+        <button class="btn pri" type="button" id="save">저장하기</button>
+      </div>
+    </div>
+  </section>
+
+  <aside class="prev" id="prev" aria-label="홈페이지 미리보기">
+    <div class="ph">
+      <b>미리보기 <span style="font-weight:400;color:#6B6358;font-size:12px">· 저장 전 내용</span></b>
+      <div class="row" style="gap:8px">
+        <div class="seg" role="group" aria-label="시안 선택" id="vseg"></div>
+        <div class="seg" role="group" aria-label="화면 크기" id="dseg"><button type="button" data-d="pc" aria-pressed="true">PC</button><button type="button" data-d="mob" aria-pressed="false">휴대폰</button></div>
+        <button class="btn sm close" type="button" id="closePrev">닫기</button>
+      </div>
+    </div>
+    <div class="frame" id="frame"><div class="fit" id="fit"><iframe id="pf" title="홈페이지 미리보기" src="about:blank"></iframe></div></div>
+  </aside>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+'use strict';
+var KEY='sg_admin_content',INBOX='sg_admin_inbox',HIST='sg_admin_hist';
+var PWK='sg_admin_pw';
+/* 실제 홈페이지(sikgoons.kr)에서는 서버(구글 Apps Script)에 저장. 시안(그 밖의 주소)에서는 연습 모드 */
+var API=/(^|\.)sikgoons\.kr$/.test(location.hostname)?'https://script.google.com/macros/s/AKfycbxi1bea57RokpSpamjC2OXRJJLgRlvF_7qSaTa19vJKIk7zy4RVwkNPA_TeewuG8s5zUw/exec':'';
+var PRACTICE=!API,PW='',INB=[],HISTS=[],LOADED=false;
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms);});}
+function rawApi(body,tries){tries=tries||3;body.password=PW;
+  return fetch(API,{method:'POST',body:JSON.stringify(body)}).then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json();})
+   .catch(function(e){if(tries>1)return sleep(700).then(function(){return rawApi(body,tries-1);});throw e;});}
+/* 비밀번호가 바뀌었거나 로그인이 오래돼서 서버가 거절하면, 그 자리에서 비밀번호를 다시 묻고 하던 일(저장·사진 올리기)을 이어서 한다. 고치던 내용은 그대로 남는다. */
+function api(body,tries){return rawApi(body,tries).then(function(j){
+  if(j&&!j.ok&&body.action!=='login'&&/비밀번호가 맞지/.test(j.error||''))return askPw().then(function(ok){return ok?rawApi(body,tries):j;});
+  return j;});}
+var PWASK=null;
+function askPw(){if(PWASK)return PWASK;PWASK=new Promise(function(done){
+  var o=document.createElement('div');o.setAttribute('role','dialog');o.setAttribute('aria-modal','true');o.setAttribute('aria-labelledby','rpT');
+  o.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(20,18,16,.55);display:grid;place-items:center;padding:20px';
+  o.innerHTML='<form style="background:#FFF;border-radius:14px;padding:26px 24px;width:min(400px,100%);box-shadow:0 20px 60px rgba(0,0,0,.25)" novalidate>'+
+   '<h2 id="rpT" style="margin:0 0 8px;font-size:18px">비밀번호를 다시 넣어 주세요</h2>'+
+   '<p style="margin:0 0 16px;font-size:14px;line-height:1.7;color:#6B6358">로그인한 뒤 시간이 지났거나 비밀번호가 바뀌었어요. 지금 고치던 내용은 그대로 있고, 비밀번호를 넣으면 하던 일을 이어서 합니다.</p>'+
+   '<input type="password" id="rpPw" autocomplete="current-password" autocapitalize="off" spellcheck="false" style="width:100%;min-height:44px;padding:10px 12px;border:1px solid #D6D0C6;border-radius:8px;font-size:16px">'+
+   '<p id="rpEr" role="alert" style="min-height:20px;margin:8px 0 0;font-size:13px;color:#B3261E"></p>'+
+   '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px"><button type="button" id="rpNo" class="btn">취소</button><button type="submit" id="rpOk" class="btn pri">확인</button></div></form>';
+  document.body.appendChild(o);var f=o.querySelector('form'),i=o.querySelector('#rpPw'),er=o.querySelector('#rpEr'),ok=o.querySelector('#rpOk');setTimeout(function(){i.focus();},30);
+  function end(v){o.remove();PWASK=null;done(v);}
+  o.querySelector('#rpNo').addEventListener('click',function(){end(false);});
+  f.addEventListener('submit',function(e){e.preventDefault();var p=i.value.trim();if(!p){i.focus();return;}
+    if(/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(p)){er.textContent='한글이 섞여 있어요. 한/영 키를 눌러 영어로 바꿔 주세요.';return;}
+    ok.disabled=true;ok.textContent='확인 중…';var old=PW;PW=p;
+    rawApi({action:'login'}).then(function(j){ok.disabled=false;ok.textContent='확인';
+      if(j.ok){try{sessionStorage.setItem('sg_pw',p);}catch(_){}end(true);}else{PW=old;er.textContent=j.error||'비밀번호가 맞지 않아요.';i.select();}})
+     .catch(function(){ok.disabled=false;ok.textContent='확인';PW=old;er.textContent='서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요.';});});});
+  return PWASK;}
+function apiGet(tries){tries=tries||4;
+  return fetch(API+'?action=content&t='+Date.now()).then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json();})
+   .catch(function(e){if(tries>1)return sleep(600).then(function(){return apiGet(tries-1);});throw e;});}
+function inb(){return PRACTICE?(lsGet(INBOX)||[]):INB;}
+function loadInbox(){if(PRACTICE)return Promise.resolve();return api({action:'inbox'}).then(function(j){if(j.ok){INB=j.items;navBadge();}});}
+function loadHist(){if(PRACTICE)return Promise.resolve();return api({action:'history'}).then(function(j){if(j.ok)HISTS=j.items;});}
+var $=function(s,r){return (r||document).querySelector(s);};
+function esc(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function clone(o){return JSON.parse(JSON.stringify(o));}
+function lsGet(k){try{return JSON.parse(localStorage.getItem(k)||'null');}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));return true;}catch(e){return false;}}
+function toast(m){var t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toast._t);toast._t=setTimeout(function(){t.classList.remove('on');},2200);}
+
+var DEF=null,SAVED={},DRAFT={},VIEW='home',EDIT=null,VAR='bw',DEV='pc',TARGET=null;
+var BANDS=[['30','30평대'],['40','40평대'],['50','50평대'],['60','60평 이상']];
+
+/* 메뉴: 홈페이지와 같은 순서 */
+var MENU=[
+  ['home','한눈에 보기','현재 상태와 저장 기록'],
+  ['cap','홈페이지 메뉴'],
+  ['hero','메인 슬라이드','첫 화면 조명 사진(꺼짐·켜짐)의 장수와 순서'],
+  ['homephotos','메인 사진','ABOUT 페이지의 Works 사진 · Before / After · 조명 사진'],
+  ['about','ABOUT','회사 소개 · 대표 디자이너 · 진행 절차'],
+  ['works','WORKS','포트폴리오 현장 목록과 사진'],
+  ['contact','CONTACT','연락처 · 상담 안내 · 상담 접수함'],
+  ['alert','상담 알림','상담이 들어오면 카톡·문자를 받을 번호'],
+  ['youtube','YOUTUBE','유튜브 채널 주소'],
+  ['blog','BLOG','블로그 주소'],
+  ['instagram','INSTAGRAM','인스타그램 주소'],
+  ['cap','그 밖에'],
+  ['texts','홈페이지 문구','첫 화면 문구 · 회사 정보'],
+  ['request','수정 요청','디자인·기능 수정을 제작사(디엔에이랩스)에 요청하기'],
+  ['pw','비밀번호 설정','관리자 비밀번호 바꾸기']
+];
+/* 제작사 수정요청 접수 화면 (고객 전용 주소, 들어갈 때 비밀번호 필요) */
+var REQ_URL='https://motodna.github.io/onemill-request/?c=cbe739d89d18342a';
+
+/* ---------- 값 읽기 ---------- */
+function txv(k){return (DRAFT.tx&&DRAFT.tx[k]!=null)?DRAFT.tx[k]:DEF.tx[k].d;}
+function setTx(k,v){DRAFT.tx=DRAFT.tx||{};if(v===DEF.tx[k].d||v==='')delete DRAFT.tx[k];else DRAFT.tx[k]=v;}
+function works(){return DRAFT.works||DEF.works;}
+function ownWorks(){if(!DRAFT.works)DRAFT.works=clone(DEF.works);return DRAFT.works;}
+function defWork(id){for(var i=0;i<DEF.works.length;i++)if(DEF.works[i].id===id)return DEF.works[i];return null;}
+function list(k){return DRAFT[k]||DEF[k];}
+function ownList(k){if(!DRAFT[k])DRAFT[k]=clone(DEF[k]);return DRAFT[k];}
+function img(k){return (DRAFT.up&&DRAFT.up[k])||(SAVED.up&&SAVED.up[k])||('img/'+k+'.jpg');}
+function ytId(s){s=String(s||'').trim();var m=/(?:v=|youtu\.be\/|shorts\/|embed\/)([\w-]{11})/.exec(s);if(m)return m[1];return /^[\w-]{11}$/.test(s)?s:'';}
+
+/* ---------- 미리보기 ---------- */
+function pw(){var f=$('#pf');return f&&f.contentWindow;}
+var pvT=null;
+function where(page,sel){TARGET={page:page||'',sel:sel||''};preview(true);}
+function fitFrame(){
+  var fr=$('#frame'),fit=$('#fit'),pf=$('#pf');if(!fr.clientWidth)return;
+  var W=DEV==='pc'?1280:390,s=DEV==='pc'?fr.clientWidth/W:Math.min(1,(fr.clientHeight-24)/844);
+  pf.style.width=W+'px';pf.style.height=(DEV==='pc'?fr.clientHeight/s:844)+'px';
+  fit.style.transform=DEV==='pc'?'scale('+s+')':'translateX(-50%) scale('+s+')';fit.style.top=DEV==='pc'?'0':'12px';
+  fr.classList.toggle('mob',DEV==='mob');
+}
+
+/* ---------- 저장 막대 ---------- */
+function dirty(){return JSON.stringify(DRAFT)!==JSON.stringify(SAVED);}
+function updBar(){
+  document.querySelectorAll('.savebar[data-sec]').forEach(function(b){
+    var d=dirty();b.classList.toggle('dirty',d);
+    var st=b.querySelector('.st');if(st)st.textContent=d?'저장하지 않은 바뀐 내용이 있어요':'바꾼 내용 없음';
+    b.querySelectorAll('button').forEach(function(x){x.disabled=!d;});
+  });
+}
+function changed(){updBar();preview();}
+function validate(){
+  var e=[];works().forEach(function(w,i){
+    if(!String(w.name||'').trim())e.push((i+1)+'번째 현장의 현장명을 적어 주세요.');
+    if(!w.cover)e.push((w.name||(i+1)+'번째 현장')+'의 대표 사진을 넣어 주세요.');
+  });return e;
+}
+function save(note){
+  var e=validate();
+  if(e.length){showErr(e);return;}
+  if(!PRACTICE){
+    if(!LOADED){showErr(['홈페이지 내용을 아직 불러오지 못했어요. 새로 고침한 뒤 다시 저장해 주세요.']);return;}
+    var bt=$('#save');bt.disabled=true;bt.textContent='저장하는 중…';
+    var c=clone(DRAFT);delete c.updated;
+    api({action:'save',content:c,note:typeof note==='string'?note:'저장'}).then(function(j){
+      bt.textContent='저장하기';
+      if(!j.ok){updBar();showErr([j.error||'저장하지 못했어요.']);return;}
+      var old=$('#errbox');if(old)old.remove();
+      SAVED=clone(DRAFT);updBar();toast('저장했어요. 홈페이지에 바로 나타납니다.');loadHist().then(function(){if(VIEW==='home')draw();});
+    }).catch(function(){bt.textContent='저장하기';updBar();showErr(['인터넷 연결이 불안정해서 저장하지 못했어요. 잠시 뒤 다시 눌러 주세요.']);});
+    return;
+  }
+  var hist=lsGet(HIST)||[];var prevC=clone(SAVED);delete prevC.up;
+  var c=clone(DRAFT);
+  if(!lsSet(KEY,c)){showErr(['저장 공간이 가득 찼어요. 연습 모드는 브라우저에 사진을 저장해서 용량이 작아요. 올린 사진 몇 장을 지우고 다시 저장해 주세요.']);return;}
+  hist.unshift({at:new Date().toISOString(),c:prevC});lsSet(HIST,hist.slice(0,15));
+  SAVED=clone(DRAFT);updBar();toast('저장했어요. 홈페이지에 바로 나타납니다.');if(VIEW==='home')draw();
+}
+function showErr(list){var b=$('#body');var old=$('#errbox');if(old)old.remove();var d=document.createElement('div');d.id='errbox';d.className='err';d.setAttribute('role','alert');d.innerHTML='<b>저장하지 못했어요</b><br>'+list.map(esc).join('<br>');b.insertBefore(d,b.firstChild);b.scrollTop=0;}
+
+/* ---------- 공통 조각 ---------- */
+/* 상담 메시지: 고객이 쓴 말 + "· 항목: 값" 줄들 → 항목마다 한 줄씩, 도면 폴더 링크는 버튼으로 */
+function msRows(ms,r){
+  ms=String(ms||'');var free=[],rows=[];
+  ms.split('\n').forEach(function(line){var m=line.match(/^·\s*([^:]+):\s*(.*)$/);if(m)rows.push([m[1].trim(),m[2].trim()]);else free.push(line);});
+  var h=r('메시지',free.join('\n').trim());
+  rows.forEach(function(x){
+    var u=x[1].match(/https:\/\/drive\.google\.com\/\S+/);
+    if(u){var n=(x[0].match(/(\d+)개/)||[])[1];h+='<dt>도면·참고 파일</dt><dd><a class="att" href="'+esc(u[0])+'" target="_blank" rel="noopener">파일 열기'+(n?' ('+n+'개)':'')+' ↗</a></dd>';}
+    else h+=r(x[0].replace(/\s*\d+개$/,''),x[1]);
+  });
+  return h;
+}
+function txField(k){
+  if(!DEF.tx[k])return '';
+  var t=DEF.tx[k],v=txv(k),ch=DRAFT.tx&&DRAFT.tx[k]!=null;
+  var inp=t.one?'<input type="text" id="tx_'+k+'" data-tx="'+k+'" value="'+esc(v)+'">':'<textarea id="tx_'+k+'" data-tx="'+k+'" rows="'+(t.big?5:3)+'">\n'+esc(v)+'</textarea>';
+  return '<div class="f"><label for="tx_'+k+'"><span>'+esc(t.l)+'</span><span>'+(ch?'<span class="chg">바꾼 문구</span> <button class="btn link" type="button" data-reset="'+k+'">기본 문구로</button>':'')+'</span></label>'+inp+'</div>';
+}
+function wireTx(root){
+  root.querySelectorAll('[data-tx]').forEach(function(el){
+    el.addEventListener('focus',function(){var t=DEF.tx[el.getAttribute('data-tx')];where(t.page||'',t.at||(t.v?'':''));});
+    el.addEventListener('input',function(){setTx(el.getAttribute('data-tx'),el.value);changed();});
+    el.addEventListener('blur',function(){var k=el.getAttribute('data-tx'),lab=root.querySelector('label[for="tx_'+k+'"] span:last-child');if(lab){var ch=DRAFT.tx&&DRAFT.tx[k]!=null;lab.innerHTML=ch?'<span class="chg">바꾼 문구</span> <button class="btn link" type="button" data-reset="'+k+'">기본 문구로</button>':'';}});
+  });
+  root.addEventListener('click',function(e){var b=e.target.closest('[data-reset]');if(!b)return;var k=b.getAttribute('data-reset');setTx(k,'');var el=$('#tx_'+k);el.value=txv(k);b.parentNode.innerHTML='';changed();});
+}
+function pairList(kind,labels,ph){
+  var L=list(kind);
+  return '<div class="list" data-list="'+kind+'">'+L.map(function(x,i){
+    return '<div class="li"><div class="flds"><input type="text" aria-label="'+labels[0]+' '+(i+1)+'" placeholder="'+labels[0]+'" data-i="'+i+'" data-j="0" value="'+esc(x[0])+'">'+
+      (ph?'<textarea rows="2" aria-label="'+labels[1]+' '+(i+1)+'" placeholder="'+labels[1]+'" data-i="'+i+'" data-j="1">'+esc(x[1])+'</textarea>':'<input type="text" aria-label="'+labels[1]+' '+(i+1)+'" placeholder="'+labels[1]+'" data-i="'+i+'" data-j="1" value="'+esc(x[1])+'">')+
+      '</div><div class="ctl"><button class="btn sm" type="button" data-mv="-1" data-i="'+i+'" aria-label="위로" '+(i?'':'disabled')+'>▲</button><button class="btn sm" type="button" data-mv="1" data-i="'+i+'" aria-label="아래로" '+(i<L.length-1?'':'disabled')+'>▼</button><button class="btn sm del" type="button" data-rm="'+i+'">삭제</button></div></div>';
+  }).join('')+'</div><div class="row" style="margin-top:10px"><button class="btn sm" type="button" data-add="'+kind+'">+ 줄 추가</button>'+(DRAFT[kind]?'<button class="btn link" type="button" data-def="'+kind+'">처음 내용으로</button>':'')+'</div>';
+}
+function wirePairs(root,kind,page,sel,redraw){
+  var box=root.querySelector('[data-list="'+kind+'"]');if(!box)return;
+  box.addEventListener('focusin',function(){where(page,sel);});
+  box.addEventListener('input',function(e){var t=e.target;if(t.dataset.i==null)return;ownList(kind)[+t.dataset.i][+t.dataset.j]=t.value;changed();});
+  box.addEventListener('click',function(e){
+    var b=e.target.closest('button');if(!b)return;var L=ownList(kind),i=+b.dataset.i;
+    if(b.dataset.mv){var j=i+(+b.dataset.mv);var x=L[i];L[i]=L[j];L[j]=x;}
+    else if(b.dataset.rm!=null){if(!confirm('이 줄을 삭제할까요?'))return;L.splice(+b.dataset.rm,1);}
+    changed();redraw();where(page,sel);
+  });
+  root.querySelector('[data-add="'+kind+'"]').addEventListener('click',function(){ownList(kind).push(['','']);changed();redraw();var ins=root.querySelectorAll('[data-list="'+kind+'"] input');if(ins.length)ins[ins.length-1].focus();});
+  var d=root.querySelector('[data-def="'+kind+'"]');if(d)d.addEventListener('click',function(){if(!confirm('처음 내용으로 되돌릴까요?'))return;delete DRAFT[kind];changed();redraw();});
+}
+function chips(arr){return '<div style="margin:-4px 0 12px">'+arr.map(function(c){return '<button type="button" class="where" data-pg="'+c[1]+'" data-sel="'+c[2]+'">↗ '+esc(c[0])+'</button>';}).join('')+'</div>';}
+function wireChips(root){root.querySelectorAll('.where').forEach(function(b){b.addEventListener('click',function(){where(b.dataset.pg,b.dataset.sel);openPrevIfSmall();});});}
+function openPrevIfSmall(){if(window.innerWidth<=1100)$('#prev').classList.add('open'),setTimeout(fitFrame,30);}
+
+/* ---------- 사진 올리기 (연습 모드: 줄여서 브라우저에 저장) ---------- */
+function readPhoto(file,cb){
+  if(!/^image\//.test(file.type)){toast('사진 파일만 올릴 수 있어요.');return;}
+  /* 원본 그대로 올리기: JPG·PNG·WEBP 이고 7.5MB 이하면 파일을 손대지 않고 그대로 올린다.
+     더 크거나(카메라 원본 등) 아이폰 HEIC 처럼 바로 못 쓰는 형식이면, 긴 변 6000px·품질 95% 로만 바꾼다(눈으로는 원본과 같음). */
+  var RAW_MAX=7.5*1024*1024,OK=['image/jpeg','image/png','image/webp'].indexOf(file.type)>=0;
+  var url=URL.createObjectURL(file),im=new Image();
+  im.onerror=function(){URL.revokeObjectURL(url);toast('사진을 읽지 못했어요. JPG 나 PNG 로 바꿔서 올려 주세요.');};
+  im.onload=function(){
+    var w=im.naturalWidth,h=im.naturalHeight,key='up'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),ratio=Math.round(h/w*1000)/1000;
+    function shrink(M,q){var s=Math.min(1,M/Math.max(w,h)),W=Math.round(w*s),H=Math.round(h*s),src=im,cw=w,ch=h;
+      while(cw/2>=W){var t=document.createElement('canvas');t.width=Math.round(cw/2);t.height=Math.round(ch/2);var tx=t.getContext('2d');tx.imageSmoothingQuality='high';tx.drawImage(src,0,0,t.width,t.height);src=t;cw=t.width;ch=t.height;}
+      var c=document.createElement('canvas');c.width=W;c.height=H;var x=c.getContext('2d');x.imageSmoothingQuality='high';x.fillStyle='#FFF';x.fillRect(0,0,W,H);x.drawImage(src,0,0,W,H);return c.toDataURL('image/jpeg',q);}
+    URL.revokeObjectURL(url);
+    if(PRACTICE){var d0=shrink(1600,.85);DRAFT.up=DRAFT.up||{};DRAFT.dim=DRAFT.dim||{};DRAFT.up[key]=d0;DRAFT.dim[key]=ratio;cb(key);return;}
+    function send(b64,mime,label){
+      toast('사진을 올리는 중이에요… ('+label+')');
+      api({action:'upload',name:(file.name||key).replace(/\.[^.]+$/,'')+(mime==='image/jpeg'?'.jpg':mime==='image/png'?'.png':'.webp'),mime:mime,data:b64},2).then(function(j){
+        if(!j.ok){toast(j.error||'사진을 올리지 못했어요.');return;}
+        DRAFT.up=DRAFT.up||{};DRAFT.dim=DRAFT.dim||{};DRAFT.up[key]='https://drive.google.com/thumbnail?id='+j.id+'&sz=w2000';DRAFT.dim[key]=ratio;cb(key);
+      }).catch(function(){toast('인터넷 연결이 불안정해서 사진을 올리지 못했어요.');});}
+    if(OK&&file.size<=RAW_MAX){var r=new FileReader();r.onload=function(){send(String(r.result).split(',')[1],file.type,'원본 그대로');};r.readAsDataURL(file);return;}
+    var du=shrink(6000,.95);if(du.length*.75>RAW_MAX)du=shrink(5000,.93);if(du.length*.75>RAW_MAX)du=shrink(4000,.92);
+    send(du.split(',')[1],'image/jpeg','고화질로 맞추는 중');
+  };
+  im.src=url;
+}
+
+/* ================= 화면 ================= */
+var V={};
+
+V.home=function(b){
+  var inbox=inb(),nd=inbox.filter(function(x){return !x.done;}).length,hist=PRACTICE?(lsGet(HIST)||[]):HISTS.map(function(h){return {at:h.time,note:h.note};});
+  b.innerHTML='<div class="stats"><div class="stat"><b>'+works().length+'</b><span>시공 사례 현장</span></div><div class="stat"><b>'+nd+'</b><span>처리 안 한 상담 신청</span></div><div class="stat"><b>'+Object.keys(SAVED.tx||{}).length+'</b><span>바꾼 문구</span></div><div class="stat"><b>'+hist.length+'</b><span>저장 기록</span></div></div>'+
+  '<div class="card" style="margin-top:16px"><h3>자주 하는 일</h3><div class="row" style="margin-top:10px"><a class="btn" href="#works">새 현장 올리기</a><a class="btn" href="#reviews">후기 넣기</a><a class="btn" href="#contact">받은 상담 확인</a><a class="btn" href="#hero">첫 화면 사진 바꾸기</a></div></div>'+
+  '<div class="card"><h3>저장 기록</h3><p class="hint">저장할 때마다 바로 전 상태를 남겨 둡니다. 잘못 고쳤다면 원하는 때로 되돌릴 수 있어요.</p>'+
+  (hist.length?hist.map(function(h,i){return '<div class="hist"><span>'+new Date(h.at).toLocaleString('ko-KR')+' 저장 바로 전</span><button class="btn sm" type="button" data-rs="'+i+'">이 때로 되돌리기</button></div>';}).join(''):'<div class="empty">아직 저장 기록이 없어요.</div>')+'</div>'+
+  '<div class="card"><h3>여기서 고칠 수 없는 것</h3><p class="hint" style="margin:0">색·글꼴·배치, 메뉴 구성, 현장 상세의 조명 켜짐/꺼짐 사진 짝, 공사 전후 비교 사진, 전화번호·주소는 제작사(디엔에이랩스)에 요청해 주세요. 블로그 글은 네이버 블로그에 올리면 홈페이지에 저절로 나타나요.</p></div>';
+  b.querySelectorAll('[data-rs]').forEach(function(x){x.addEventListener('click',function(){
+    if(!confirm('이 때의 내용으로 되돌리고 저장할까요? 지금 내용은 저장 기록에 남습니다.'))return;
+    if(!PRACTICE){api({action:'restore',time:hist[+x.dataset.rs].at}).then(function(j){if(!j.ok){showErr([j.error||'되돌리지 못했어요.']);return;}
+      apiGet().then(function(c){delete c.updated;SAVED=c;DRAFT=clone(c);loadHist().then(function(){draw();preview(true);toast('되돌렸어요.');});});});return;}
+    var h=hist[+x.dataset.rs].c,up=Object.assign({},SAVED.up||{},DRAFT.up||{}),dim=Object.assign({},SAVED.dim||{},DRAFT.dim||{});
+    DRAFT=clone(h);DRAFT.up=up;DRAFT.dim=dim;save();preview(true);draw();
+  });});
+  where('','');
+};
+
+/* ---------- 메인 슬라이드: 조명 꺼짐/켜짐 사진 쌍의 장수와 순서 ---------- */
+
+/* ================= 식군스 전용 ================= */
+MENU=[
+  ['home','한눈에 보기','현재 상태와 저장 기록'],
+  ['cap','홈페이지 메뉴'],
+  ['hero','첫 화면','메인 슬라이드 사진과 큰 제목'],
+  ['works','시공 사례','현장 목록 · 현장별 글과 사진'],
+  ['reviews','고객 후기','메인과 소개 페이지에 나오는 후기'],
+  ['about','소개','회사 소개 · 대표 디자이너 · 숫자 4칸'],
+  ['contact','상담','상담 안내 문구 · 받은 상담'],
+  ['alert','상담 알림','상담이 들어오면 카톡·문자를 받을 번호'],
+  ['cap','그 밖에'],
+  ['pw','비밀번호 설정','관리자 비밀번호 바꾸기']
+];
+var TXL={
+  heroT:{l:'큰 제목 (엔터 = 줄바꿈)',page:'home',at:'#tHero'},heroS:{l:'작은 문구',one:1,page:'home',at:'#tHero'},
+  aboutBig:{l:'큰 문장 (엔터 = 줄바꿈)',page:'about',at:'#tAbout'},aboutBody:{l:'회사 소개 글',big:1,page:'about',at:'#tAbout'},
+  ceoName:{l:'대표 이름 줄',one:1,page:'about',at:'#tCeo'},ceo:{l:'대표 이력 (한 줄에 하나씩)',page:'about',at:'#tCeo'},
+  f1b:{l:'① 큰 글씨',one:1,page:'about',at:'#tFacts'},f1s:{l:'① 작은 설명',page:'about',at:'#tFacts'},
+  f2b:{l:'② 큰 글씨',one:1,page:'about',at:'#tFacts'},f2s:{l:'② 작은 설명',page:'about',at:'#tFacts'},
+  f3b:{l:'③ 큰 글씨',one:1,page:'about',at:'#tFacts'},f3s:{l:'③ 작은 설명',page:'about',at:'#tFacts'},
+  f4b:{l:'④ 큰 글씨',one:1,page:'about',at:'#tFacts'},f4s:{l:'④ 작은 설명',page:'about',at:'#tFacts'},
+  hPhone:{l:'전화 상담 시간',one:1,page:'contact',at:'#tHours'},hVisit:{l:'방문 상담 안내',one:1,page:'contact',at:'#tHours'},
+  kakao:{l:'카카오톡 ID',one:1,page:'contact',at:'#tHours'},region:{l:'시공 지역',one:1,page:'contact',at:'#tHours'}
+};
+function prepDef(){DEF.tx={};for(var k in DEF.TXD){var m=TXL[k]||{l:k};DEF.tx[k]={d:DEF.TXD[k],l:m.l,one:m.one,big:m.big,page:m.page,at:m.at};}}
+function img(k){return (DRAFT.up&&DRAFT.up[k])||(SAVED.up&&SAVED.up[k])||('img/'+k+'.jpg');}
+function defWorks(){return DEF.ORDER.map(function(id){return clone(DEF.P[id]);});}
+function works(){return DRAFT.works||defWorks();}
+function ownWorks(){if(!DRAFT.works)DRAFT.works=defWorks();return DRAFT.works;}
+function findWork(id){var W=works();for(var i=0;i<W.length;i++)if(W[i].id===id)return W[i];return null;}
+function heroCur(){return DRAFT.hero||DEF.HERO;}
+function heroOwn(){if(!DRAFT.hero)DRAFT.hero=DEF.HERO.slice();return DRAFT.hero;}
+function revs(){return DRAFT.reviews||[];}
+function revOwn(){if(!DRAFT.reviews)DRAFT.reviews=[];return DRAFT.reviews;}
+function preview(now){clearTimeout(pvT);pvT=setTimeout(function(){var w=pw();if(!w||!w.SG_PREVIEW)return;try{var t=TARGET||{};w.SG_PREVIEW(DRAFT,t.page||'home',t.sel||'');}catch(e){}},now?0:220);}
+function validate(){var e=[];works().forEach(function(w,i){
+  if(!String(w.name||'').trim())e.push((i+1)+'번째 현장의 현장명을 적어 주세요.');
+  if(!w.cover)e.push((w.name||(i+1)+'번째 현장')+'의 목록 사진을 넣어 주세요.');});
+  revs().forEach(function(r,i){if(!String(r.text||'').trim())e.push((i+1)+'번째 후기의 내용을 적어 주세요. (내용이 없으면 [삭제]를 눌러 주세요)');});
+  if(!heroCur().length)e.push('첫 화면 슬라이드 사진이 한 장 이상 있어야 해요.');return e;}
+function thumb(k,cls){return '<img class="'+(cls||'th')+'" src="'+esc(img(k))+'" alt="" loading="lazy">';}
+function pickPhotos(multi,cb){var i=document.createElement('input');i.type='file';i.accept='image/*';if(multi)i.multiple=true;
+  i.addEventListener('change',function(){var fs=[].slice.call(i.files||[]);if(!fs.length)return;var n=0;
+    (function next(){if(n>=fs.length)return;readPhoto(fs[n++],function(k){cb(k);next();});})();});i.click();}
+
+/* ---------- 첫 화면 ---------- */
+V.hero=function(b){
+  var H=heroCur();
+  b.innerHTML=chips([['첫 화면','home','#tHero']])+
+  '<div class="card"><h3>큰 제목 · 작은 문구</h3><p class="hint">첫 화면 사진 위 왼쪽 아래에 나오는 글입니다.</p>'+txField('heroT')+txField('heroS')+'</div>'+
+  '<div class="card"><h3>슬라이드 사진 ('+H.length+'장)</h3><p class="hint">첫 화면에서 5.5초마다 바뀌는 사진입니다. 맨 위 사진이 가장 먼저 나와요. 가로 사진, 긴 변 2000px 이상을 권장합니다. 3~6장이 적당해요.</p>'+
+  '<div class="glist">'+H.map(function(k,i){return '<div class="gi">'+thumb(k)+'<div class="gc"><span>'+(i+1)+'</span><button class="btn sm" type="button" data-hm="-1" data-i="'+i+'" aria-label="앞으로" '+(i?'':'disabled')+'>◀</button><button class="btn sm" type="button" data-hm="1" data-i="'+i+'" aria-label="뒤로" '+(i<H.length-1?'':'disabled')+'>▶</button><button class="btn sm del" type="button" data-hr="'+i+'" '+(H.length>1?'':'disabled')+'>빼기</button></div></div>';}).join('')+'</div>'+
+  '<div class="row" style="margin-top:12px"><button class="btn" type="button" id="hAdd">+ 사진 올리기</button>'+(DRAFT.hero?'<button class="btn link" type="button" id="hDef">처음 사진으로</button>':'')+'</div></div>';
+  wireTx(b);wireChips(b);
+  b.querySelectorAll('[data-hm]').forEach(function(x){x.addEventListener('click',function(){var L=heroOwn(),i=+x.dataset.i,j=i+(+x.dataset.hm);var t=L[i];L[i]=L[j];L[j]=t;changed();draw();where('home','#tHero');});});
+  b.querySelectorAll('[data-hr]').forEach(function(x){x.addEventListener('click',function(){heroOwn().splice(+x.dataset.hr,1);changed();draw();where('home','#tHero');});});
+  b.querySelector('#hAdd').addEventListener('click',function(){pickPhotos(true,function(k){heroOwn().push(k);changed();draw();where('home','#tHero');});});
+  var d=b.querySelector('#hDef');if(d)d.addEventListener('click',function(){if(!confirm('첫 화면 사진을 처음 사진으로 되돌릴까요?'))return;delete DRAFT.hero;changed();draw();});
+  where('home','#tHero');
+};
+
+/* ---------- 시공 사례 ---------- */
+V.works=function(b){
+  if(EDIT){workEdit(b,EDIT);return;}
+  var W=works(),shown=W.filter(function(w){return !w.hidden;}).length;
+  b.innerHTML=chips([['시공 사례 페이지','works',''],['메인 최근 현장','home','.grid']])+
+  '<div class="card"><div class="row" style="justify-content:space-between"><div><h3>현장 목록 ('+shown+'곳 보임 · 전체 '+W.length+'곳)</h3><p class="hint" style="margin:0">위에 있는 현장이 홈페이지에서 먼저 나와요. [숨기기]를 누르면 홈페이지에서만 안 보이고 목록에는 남아요.</p></div><button class="btn pri" type="button" id="wNew">+ 새 현장 추가</button></div>'+
+  '<div class="list" style="margin-top:14px">'+W.map(function(w,i){return '<div class="li wrow'+(w.hidden?' off':'')+'">'+thumb(w.cover,'wt')+
+    '<div class="wn"><b>'+esc(w.name||'(현장명 없음)')+'</b> <span>'+esc(String(w.py||'').replace('PY','평'))+(w.area?' · '+esc(w.area):'')+'</span>'+(w.hidden?' <span class="tag">숨김</span>':'')+'</div>'+
+    '<div class="ctl"><button class="btn sm" type="button" data-wm="-1" data-i="'+i+'" aria-label="위로" '+(i?'':'disabled')+'>▲</button><button class="btn sm" type="button" data-wm="1" data-i="'+i+'" aria-label="아래로" '+(i<W.length-1?'':'disabled')+'>▼</button>'+
+    '<button class="btn sm" type="button" data-wh="'+i+'">'+(w.hidden?'보이기':'숨기기')+'</button><button class="btn sm pri" type="button" data-we="'+esc(w.id)+'">수정</button></div></div>';}).join('')+'</div>'+
+  (DRAFT.works?'<div class="row" style="margin-top:10px"><button class="btn link" type="button" id="wDef">처음 목록으로</button></div>':'')+'</div>';
+  wireChips(b);
+  b.querySelectorAll('[data-wm]').forEach(function(x){x.addEventListener('click',function(){var L=ownWorks(),i=+x.dataset.i,j=i+(+x.dataset.wm);var t=L[i];L[i]=L[j];L[j]=t;changed();draw();where('works','');});});
+  b.querySelectorAll('[data-wh]').forEach(function(x){x.addEventListener('click',function(){var w=ownWorks()[+x.dataset.wh];if(w.hidden)delete w.hidden;else w.hidden=true;changed();draw();where('works','');});});
+  b.querySelectorAll('[data-we]').forEach(function(x){x.addEventListener('click',function(){EDIT=x.dataset.we;draw();});});
+  b.querySelector('#wNew').addEventListener('click',function(){var id='w'+Date.now().toString(36);var d=new Date();
+    ownWorks().unshift({id:id,name:'',py:'',area:'양산',type:'아파트',date:d.getFullYear()+'.'+('0'+(d.getMonth()+1)).slice(-2)+'.'+('0'+d.getDate()).slice(-2),title:'',desc:'',line:'',cover:'',best:'',hero:null,gallery:[],light:[],ba:[],before:[]});
+    EDIT=id;changed();draw();});
+  var d=b.querySelector('#wDef');if(d)d.addEventListener('click',function(){if(!confirm('현장 목록과 현장별 글·사진을 모두 처음 상태로 되돌릴까요? (저장하기 전까지는 홈페이지에 반영되지 않아요)'))return;delete DRAFT.works;changed();draw();});
+  where('works','');
+};
+function workEdit(b,id){
+  var w=null,L=ownWorks();for(var i=0;i<L.length;i++)if(L[i].id===id)w=L[i];
+  if(!w){EDIT=null;draw();return;}
+  var pyN=String(w.py||'').replace(/[^0-9]/g,''),g=w.gallery||[];
+  function photoSlot(key,label,hint){return '<div class="pslot"><div class="pl">'+label+'</div>'+(w[key]?thumb(w[key],'pbig'):'<div class="pbig empty">사진 없음</div>')+'<p class="hint">'+hint+'</p><button class="btn sm" type="button" data-ph="'+key+'">'+(w[key]?'사진 바꾸기':'사진 넣기')+'</button></div>';}
+  b.innerHTML='<div class="row" style="margin-bottom:12px"><button class="btn sm" type="button" id="wBack">← 현장 목록</button></div>'+
+  chips([['이 현장 상세 페이지',w.id,''],['시공 사례 목록','works','']])+
+  '<div class="card"><h3>기본 정보</h3>'+
+   '<div class="f"><label for="wf_name">현장명 (예: 반도유보라 5차)</label><input type="text" id="wf_name" data-wf="name" value="'+esc(w.name)+'"></div>'+
+   '<div class="grid2"><div class="f"><label for="wf_py">평수 (숫자만)</label><input type="text" id="wf_py" inputmode="numeric" maxlength="3" value="'+esc(pyN)+'"></div>'+
+   '<div class="f"><label for="wf_area">지역 (예: 양산 물금)</label><input type="text" id="wf_area" data-wf="area" value="'+esc(w.area)+'"></div>'+
+   '<div class="f"><label for="wf_type">유형 (예: 아파트 · 전체 인테리어)</label><input type="text" id="wf_type" data-wf="type" value="'+esc(w.type||'아파트')+'"></div>'+
+   '<div class="f"><label for="wf_date">날짜 (예: 2026.11.27)</label><input type="text" id="wf_date" data-wf="date" value="'+esc(w.date)+'"></div></div>'+
+   '<div class="f"><label for="wf_title">긴 제목 (사진을 크게 볼 때 아래에 나와요)</label><input type="text" id="wf_title" data-wf="title" value="'+esc(w.title)+'"></div>'+
+   '<div class="f"><label for="wf_desc">설명 (상세 페이지 사진 아래 글)</label><textarea id="wf_desc" data-wf="desc" rows="5">'+esc(w.desc||w.line)+'</textarea></div></div>'+
+  '<div class="card"><h3>대표 사진</h3><div class="pslots">'+photoSlot('cover','목록 사진','시공 사례 목록과 메인에서 정사각형으로 잘려 보여요. 가로 사진이 좋아요.')+photoSlot('best','베스트컷','상세 페이지 맨 위 가운데 큰 사진이에요. 세로 사진이 잘 어울려요.')+'</div></div>'+
+  '<div class="card"><h3>공간 둘러보기 사진 ('+g.length+'장)</h3><p class="hint">상세 페이지 가운데에 나오는 사진들이에요. 여러 장을 한 번에 골라 올릴 수 있어요.</p>'+
+   '<div class="glist">'+g.map(function(k,i){return '<div class="gi">'+thumb(k)+'<div class="gc"><span>'+(i+1)+'</span><button class="btn sm" type="button" data-gm="-1" data-i="'+i+'" aria-label="앞으로" '+(i?'':'disabled')+'>◀</button><button class="btn sm" type="button" data-gm="1" data-i="'+i+'" aria-label="뒤로" '+(i<g.length-1?'':'disabled')+'>▶</button><button class="btn sm del" type="button" data-gr="'+i+'">빼기</button></div></div>';}).join('')+'</div>'+
+   '<div class="row" style="margin-top:12px"><button class="btn" type="button" id="gAdd">+ 사진 추가</button></div></div>'+
+  '<div class="card"><h3>이 현장 지우기</h3><p class="hint">홈페이지에서 잠깐 안 보이게만 하려면 목록에서 [숨기기]를 쓰세요. 지우면 이 현장의 글과 사진 목록이 사라져요(저장하기 전에는 되돌리기로 살릴 수 있어요).</p><button class="btn del" type="button" id="wDel">이 현장 지우기</button></div>';
+  wireChips(b);
+  b.querySelector('#wBack').addEventListener('click',function(){EDIT=null;draw();});
+  b.querySelectorAll('[data-wf]').forEach(function(el){el.addEventListener('focus',function(){where(w.id,'');});el.addEventListener('input',function(){var k=el.dataset.wf;w[k]=el.value;if(k==='desc')w.line=el.value.split('\n')[0].slice(0,60);changed();});});
+  var py=b.querySelector('#wf_py');py.addEventListener('input',function(){py.value=py.value.replace(/[^0-9]/g,'');w.py=py.value?py.value+'PY':'';changed();});
+  b.querySelectorAll('[data-ph]').forEach(function(x){x.addEventListener('click',function(){var k=x.dataset.ph;pickPhotos(false,function(key){w[k]=key;if(k==='cover'&&!w.best)w.best=key;changed();draw();where(w.id,'');});});});
+  b.querySelectorAll('[data-gm]').forEach(function(x){x.addEventListener('click',function(){var G=w.gallery,i=+x.dataset.i,j=i+(+x.dataset.gm);var t=G[i];G[i]=G[j];G[j]=t;changed();draw();where(w.id,'');});});
+  b.querySelectorAll('[data-gr]').forEach(function(x){x.addEventListener('click',function(){w.gallery.splice(+x.dataset.gr,1);changed();draw();where(w.id,'');});});
+  b.querySelector('#gAdd').addEventListener('click',function(){pickPhotos(true,function(key){w.gallery=w.gallery||[];w.gallery.push(key);changed();draw();where(w.id,'');});});
+  b.querySelector('#wDel').addEventListener('click',function(){if(!confirm('"'+(w.name||'이 현장')+'"을(를) 지울까요?'))return;var L2=ownWorks();L2.splice(L2.indexOf(w),1);EDIT=null;changed();draw();});
+  where(w.id,'');
+}
+
+/* ---------- 고객 후기 ---------- */
+V.reviews=function(b){
+  var R=revs();
+  b.innerHTML=chips([['메인 후기','home','#tReviews'],['소개 페이지 후기','about','#tReviews']])+
+  '<div class="card"><h3>고객 후기 ('+R.length+'개)</h3><p class="hint">후기가 하나라도 있으면 메인(진행 절차 위)과 소개 페이지에 후기 칸이 나타나요. 고객님께 동의를 받은 후기만 넣어 주세요. 이름은 "김*진 고객님"처럼 가려 쓰는 것을 권장해요.</p>'+
+  '<div class="list">'+(R.length?R.map(function(r,i){return '<div class="li"><div class="flds">'+
+    '<div class="grid2"><input type="text" placeholder="이름 (예: 김*진 고객님)" aria-label="'+(i+1)+'번 후기 이름" data-ri="'+i+'" data-rk="name" value="'+esc(r.name)+'"><input type="text" placeholder="현장 (예: 반도유보라 5차 36평)" aria-label="'+(i+1)+'번 후기 현장" data-ri="'+i+'" data-rk="site" value="'+esc(r.site)+'"></div>'+
+    '<input type="text" placeholder="날짜 (예: 2026.11, 선택)" aria-label="'+(i+1)+'번 후기 날짜" data-ri="'+i+'" data-rk="date" value="'+esc(r.date)+'">'+
+    '<textarea rows="4" placeholder="후기 내용" aria-label="'+(i+1)+'번 후기 내용" data-ri="'+i+'" data-rk="text">'+esc(r.text)+'</textarea></div>'+
+    '<div class="ctl"><button class="btn sm" type="button" data-rv="-1" data-i="'+i+'" aria-label="위로" '+(i?'':'disabled')+'>▲</button><button class="btn sm" type="button" data-rv="1" data-i="'+i+'" aria-label="아래로" '+(i<R.length-1?'':'disabled')+'>▼</button><button class="btn sm del" type="button" data-rd="'+i+'">삭제</button></div></div>';}).join(''):'<div class="empty">아직 후기가 없어요. [+ 후기 추가]를 눌러 넣어 보세요.</div>')+'</div>'+
+  '<div class="row" style="margin-top:10px"><button class="btn" type="button" id="rAdd">+ 후기 추가</button></div></div>';
+  wireChips(b);
+  b.querySelectorAll('[data-ri]').forEach(function(el){el.addEventListener('focus',function(){where('home','#tReviews');});el.addEventListener('input',function(){revOwn()[+el.dataset.ri][el.dataset.rk]=el.value;changed();});});
+  b.querySelectorAll('[data-rv]').forEach(function(x){x.addEventListener('click',function(){var L=revOwn(),i=+x.dataset.i,j=i+(+x.dataset.rv);var t=L[i];L[i]=L[j];L[j]=t;changed();draw();});});
+  b.querySelectorAll('[data-rd]').forEach(function(x){x.addEventListener('click',function(){if(!confirm('이 후기를 삭제할까요?'))return;revOwn().splice(+x.dataset.rd,1);changed();draw();});});
+  b.querySelector('#rAdd').addEventListener('click',function(){revOwn().push({name:'',site:'',date:'',text:''});changed();draw();var t=b.querySelectorAll('[data-rk="text"]');if(t.length)t[t.length-1].focus();});
+  where('home','#tReviews');
+};
+
+/* ---------- 소개 ---------- */
+V.about=function(b){
+  b.innerHTML=chips([['소개 글','about','#tAbout'],['대표 디자이너','about','#tCeo'],['숫자 4칸','about','#tFacts']])+
+  '<div class="card"><h3>회사 소개</h3>'+txField('aboutBig')+txField('aboutBody')+'</div>'+
+  '<div class="card"><h3>대표 디자이너</h3>'+txField('ceoName')+txField('ceo')+'</div>'+
+  '<div class="card"><h3>숫자 4칸</h3><p class="hint">소개 페이지 가운데 가로로 나오는 네 칸이에요. 큰 글씨는 짧게 써 주세요.</p>'+txField('f1b')+txField('f1s')+txField('f2b')+txField('f2s')+txField('f3b')+txField('f3s')+txField('f4b')+txField('f4s')+'</div>';
+  wireTx(b);wireChips(b);where('about','#tAbout');
+};
+
+V.contact=function(b){
+  function draw2(){
+    var inbox=inb();
+    b.innerHTML=chips([['상담 페이지','contact','#tHours']])+
+    '<div class="card"><h3>상담 안내</h3><p class="hint">상담 페이지 맨 위와 맨 아래 회사 정보에 나와요. 전화번호를 바꾸려면 제작사에 요청해 주세요.</p>'+txField('hPhone')+txField('hVisit')+txField('kakao')+txField('region')+'</div>'+
+    '<div class="card"><div class="row" style="justify-content:space-between"><div><h3>상담 접수함 ('+inbox.length+')</h3><p class="hint" style="margin:0">홈페이지 상담 폼으로 들어온 신청입니다. 처리하면 "처리 완료"를 눌러 두세요. 이 칸은 바로 저장돼요.</p></div></div>'+
+    '<div class="list" style="margin-top:14px">'+(inbox.length?inbox.map(function(x,i){var d=x.d||{};function r(l,v){return '<dt>'+l+'</dt><dd>'+(v?esc(v):'<span style="color:#A39A8E">미입력</span>')+'</dd>';}
+      return '<div class="inb'+(x.done?' done':'')+'"><div class="h"><b>'+esc(d.nm||'(이름 없음)')+'</b><span style="font-size:13px;color:#6B6358">'+new Date(x.at).toLocaleString('ko-KR')+(d.src?' · '+esc(d.src):'')+'</span></div><dl>'+r('연락처',d.ph)+r('아파트·단지명',d.apt)+r('평형',d.py)+r('희망 시기',d.wh)+r('예산',d.bd)+msRows(d.ms,r)+'</dl>'+
+      '<div class="row" style="margin-top:10px;justify-content:space-between">'+(d.ph?'<a class="btn sm" href="tel:'+esc(String(d.ph).replace(/[^\d+]/g,''))+'">전화 걸기</a>':'<span></span>')+'<div class="row"><label class="chk"><input type="checkbox" data-done="'+i+'"'+(x.done?' checked':'')+'> 처리 완료</label><button class="btn sm del" type="button" data-del="'+i+'">삭제</button></div></div></div>';}).join(''):'<div class="empty">아직 들어온 상담 신청이 없어요.<br>홈페이지 상담 페이지에서 신청이 들어오면 여기에 쌓여요.</div>')+'</div></div>';
+    wireTx(b);wireChips(b);
+    b.querySelectorAll('[data-done]').forEach(function(x){x.addEventListener('change',function(){if(!PRACTICE){var it=INB[+x.dataset.done];it.done=x.checked;draw2();navBadge();api({action:'inboxDone',id:it.id,done:x.checked}).then(function(j){if(!j.ok)toast(j.error||'저장하지 못했어요.');});return;}var ib=lsGet(INBOX)||[];ib[+x.dataset.done].done=x.checked;lsSet(INBOX,ib);draw2();navBadge();});});
+    b.querySelectorAll('[data-del]').forEach(function(x){x.addEventListener('click',function(){if(!confirm('이 상담 신청을 삭제할까요? 되돌릴 수 없어요.'))return;if(!PRACTICE){var it=INB[+x.dataset.del];api({action:'inboxDel',id:it.id}).then(function(j){if(!j.ok){toast(j.error||'삭제하지 못했어요.');return;}INB.splice(INB.indexOf(it),1);draw2();navBadge();});return;}var ib=lsGet(INBOX)||[];ib.splice(+x.dataset.del,1);lsSet(INBOX,ib);draw2();navBadge();});});
+  }
+  draw2();where('contact','#tHours');if(!PRACTICE)loadInbox().then(function(){if(VIEW==='contact')draw2();});
+};
+
+function linkView(b,key,label,hint,ph){
+  var cur=DRAFT[key]||DEF[key];
+  b.innerHTML=chips([['메뉴의 '+label.toUpperCase(),'','header'],['맨 아래 링크','','footer']])+
+  '<div class="card"><h3>'+label+' 주소</h3><p class="hint">'+hint+'</p><div class="f"><label for="lk">주소</label><input type="url" id="lk" value="'+esc(cur)+'" placeholder="'+ph+'"></div>'+
+  '<div class="row" style="margin-top:10px"><a class="btn sm" id="lkGo" href="'+esc(cur)+'" target="_blank" rel="noopener">새 창에서 열어 확인 ↗</a>'+(DRAFT[key]?'<button class="btn link" type="button" id="lkDef">처음 주소로</button>':'')+'</div></div>';
+  wireChips(b);
+  var i=b.querySelector('#lk');i.addEventListener('focus',function(){where('','header');});
+  i.addEventListener('input',function(){var v=i.value.trim();if(!v||v===DEF[key])delete DRAFT[key];else DRAFT[key]=v;b.querySelector('#lkGo').href=v||DEF[key];changed();});
+  var d=b.querySelector('#lkDef');if(d)d.addEventListener('click',function(){delete DRAFT[key];changed();draw();});
+  where('','header');
+}
+/* 상담 알림 받을 번호: DNA LABS 상담알림 허브에 저장 (허브가 이 홈페이지 서버에 관리자 비밀번호를 확인한 뒤에만 바꿈) */
+var HUB='https://script.google.com/macros/s/AKfycbzqxtP6tYTGIsjLdH_TWFhisn2u77UIPDrqCHa7RwJcGDU7AWaCWap_P9B0H7u07sNa/exec',HUB_ID='sikgoons';
+function hubCall(body){body.clientId=HUB_ID;body.password=PW;
+  return fetch(HUB,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(body)}).then(function(r){if(!r.ok)throw new Error('http '+r.status);return r.json();});}
+function hubApi(body){return hubCall(body).then(function(j){if(j&&!j.ok&&/비밀번호가 맞지/.test(j.error||''))return askPw().then(function(ok){return ok?hubCall(body):j;});return j;});}
+function fmtTel(v){var d=String(v||'').replace(/\D/g,'').slice(0,11);return d.length<4?d:d.length<8?d.replace(/(\d{3})(\d+)/,'$1-$2'):d.replace(/(\d{3})(\d{3,4})(\d{4})$/,'$1-$2-$3');}
+V.alert=function(b){
+  b.innerHTML='<div class="card"><h3>상담 알림 받을 번호</h3><p class="hint">홈페이지에서 상담 신청이 들어오면 아래 번호로 카카오톡 알림이 바로 갑니다(카톡을 못 받으면 문자). 두 명이 받으려면 [+ 번호 추가]를 누르세요. 최대 2개.'+(PRACTICE?' 지금은 연습 모드라 실제로 저장되지 않아요.':'')+'</p><div id="alBox"><p class="hint">불러오는 중…</p></div></div>';
+  var box=b.querySelector('#alBox');
+  function paint(st){var ph=(st.phones&&st.phones.length)?st.phones.slice(0,2):[''];
+    box.innerHTML='<label class="row" style="gap:10px;align-items:center;margin:4px 0 16px;font-size:15px"><input type="checkbox" id="alOn" style="width:20px;height:20px"'+(st.enabled?' checked':'')+'> 상담 알림 받기</label>'+
+      '<div id="alList">'+ph.map(function(p,i){return '<div class="row" style="gap:8px;margin-bottom:8px"><label class="sr" for="alP'+i+'">받을 번호 '+(i+1)+'</label><input id="alP'+i+'" type="tel" inputmode="numeric" maxlength="13" placeholder="010-0000-0000" autocomplete="tel" value="'+esc(fmtTel(p))+'" style="max-width:240px"><button class="btn sm del" type="button" data-alrm="'+i+'" aria-label="'+(i+1)+'번 번호 지우기">삭제</button></div>';}).join('')+'</div>'+
+      (ph.length<2?'<button class="btn sm" type="button" id="alAdd">+ 번호 추가</button>':'')+
+      '<p id="alMsg" role="status" style="min-height:20px;margin:14px 0 0;font-size:13px"></p>'+
+      '<div class="row" style="margin-top:10px"><button class="btn pri" type="button" id="alSave">번호 저장</button></div>';
+    var cur=function(){return [].map.call(box.querySelectorAll('#alList input'),function(x){return x.value;});};
+    box.querySelectorAll('#alList input').forEach(function(x){x.addEventListener('input',function(){x.value=fmtTel(x.value);});});
+    box.querySelectorAll('[data-alrm]').forEach(function(x){x.addEventListener('click',function(){var l=cur();l.splice(+x.getAttribute('data-alrm'),1);paint({phones:l,enabled:box.querySelector('#alOn').checked});});});
+    var ad=box.querySelector('#alAdd');if(ad)ad.addEventListener('click',function(){var l=cur();l.push('');paint({phones:l,enabled:box.querySelector('#alOn').checked});var ins=box.querySelectorAll('#alList input');ins[ins.length-1].focus();});
+    box.querySelector('#alSave').addEventListener('click',function(){var msg=box.querySelector('#alMsg'),on=box.querySelector('#alOn').checked;
+      var l=cur().map(function(x){return x.replace(/\D/g,'');}).filter(Boolean);
+      var bad=l.filter(function(x){return !/^01\d{8,9}$/.test(x);});
+      msg.style.color='#B42318';
+      if(bad.length){msg.textContent='휴대폰 번호를 다시 확인해 주세요: '+bad.map(fmtTel).join(', ');return;}
+      if(on&&!l.length){msg.textContent='알림을 받을 번호를 하나 이상 넣어 주세요.';return;}
+      if(l.length>2){msg.textContent='번호는 2개까지 넣을 수 있어요.';return;}
+      var bt=box.querySelector('#alSave');bt.disabled=true;bt.textContent='저장 중…';msg.textContent='';
+      var p=PRACTICE?Promise.resolve({ok:true,phones:l.map(fmtTel),enabled:on}):hubApi({action:'setAlert',phones:l.join(','),enabled:on});
+      p.then(function(j){bt.disabled=false;bt.textContent='번호 저장';
+        if(!j.ok){msg.textContent=j.error||'저장하지 못했어요.';return;}
+        if(PRACTICE){try{localStorage.setItem('sg_alert',JSON.stringify(j));}catch(_){}}
+        paint(j);var m2=box.querySelector('#alMsg');m2.style.color='#137a3a';m2.textContent=j.enabled?'저장했어요. 다음 상담부터 이 번호로 알림이 갑니다.':'저장했어요. 상담 알림이 꺼졌어요(상담 접수는 계속 받아요).';toast('상담 알림 번호를 저장했어요');})
+       .catch(function(){bt.disabled=false;bt.textContent='번호 저장';msg.textContent='인터넷 연결이 불안정해요. 다시 눌러 주세요.';});});}
+  if(PRACTICE){var st={phones:['010-0000-0000'],enabled:true};try{st=JSON.parse(localStorage.getItem('sg_alert'))||st;}catch(_){}paint(st);}
+  else hubApi({action:'getAlert'}).then(function(j){if(!j.ok){box.innerHTML='<p class="hint" style="color:#B42318">'+esc(j.error||'불러오지 못했어요.')+'</p>';return;}paint(j);})
+    .catch(function(){box.innerHTML='<p class="hint" style="color:#B42318">불러오지 못했어요. 인터넷 연결을 확인하고 다시 열어 주세요.</p>';});
+  where('','');
+};
+V.pw=function(b){
+  b.innerHTML='<div class="card"><h3>관리자 비밀번호 바꾸기</h3><p class="hint">관리자 페이지에 들어갈 때 쓰는 비밀번호입니다. 8자 이상으로 정해 주세요.'+(PRACTICE?' 지금은 연습 모드라 이 브라우저에만 저장됩니다. 실제 홈페이지 연결 후에는 서버에 저장되어 어느 기기에서나 같은 비밀번호로 들어갑니다.':'')+'</p>'+
+   '<form id="cpw" novalidate><div class="f"><label for="cp0">지금 비밀번호</label><input type="password" id="cp0" autocomplete="current-password"></div>'+
+   '<div class="f"><label for="cp1">새 비밀번호 (8자 이상)</label><input type="password" id="cp1" autocomplete="new-password"></div>'+
+   '<div class="f"><label for="cp2">새 비밀번호 한 번 더</label><input type="password" id="cp2" autocomplete="new-password"></div>'+
+   '<p id="cpErr" role="alert" style="margin:10px 0 0;color:#B42318;font-size:13px"></p>'+
+   '<div class="row" style="margin-top:14px"><button class="btn pri" type="submit">비밀번호 바꾸기</button></div></form></div>';
+  b.querySelector('#cpw').addEventListener('submit',function(e){e.preventDefault();
+    var p0=b.querySelector('#cp0').value.trim(),p1=b.querySelector('#cp1').value.trim(),p2=b.querySelector('#cp2').value.trim(),er=b.querySelector('#cpErr');
+    if(/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test(p0+p1+p2)){er.textContent='한글로 입력되고 있어요. 한/영 키를 눌러 영어로 바꾼 뒤 다시 입력해 주세요.';return;}
+    (PRACTICE?pwCheck(p0):Promise.resolve(p0===PW)).then(function(ok){
+      if(!ok){er.textContent='지금 비밀번호가 맞지 않아요.';b.querySelector('#cp0').focus();return;}
+      if(p1.length<8){er.textContent='새 비밀번호는 8자 이상으로 정해 주세요.';b.querySelector('#cp1').focus();return;}
+      if(p1!==p2){er.textContent='새 비밀번호 두 칸이 서로 달라요.';b.querySelector('#cp2').focus();return;}
+      if(!PRACTICE){api({action:'setpw',newPassword:p1}).then(function(j){if(!j.ok){er.textContent=j.error||'바꾸지 못했어요.';return;}PW=p1;try{sessionStorage.setItem('sg_pw',p1);}catch(e){}er.textContent='';b.querySelector('#cpw').reset();toast('비밀번호를 바꿨어요');}).catch(function(){er.textContent='인터넷 연결이 불안정해요. 다시 눌러 주세요.';});return;}
+      pwSet(p1).then(function(){er.textContent='';b.querySelector('#cpw').reset();toast('비밀번호를 바꿨어요');});
+    });
+  });
+  where('','');
+};
+
+/* ---------- 그리기 ---------- */
+function navBadge(){var n=inb().filter(function(x){return !x.done;}).length,a=$('#nav a[href="#contact"] .badge');if(a){a.textContent=n;a.classList.toggle('hide',!n);}}
+function drawNav(){
+  $('#nav').innerHTML=MENU.map(function(m){if(m[0]==='cap')return '<div class="cap">'+m[1]+'</div>';
+    return '<a href="#'+m[0]+'"'+(VIEW===m[0]?' aria-current="page"':'')+'><span>'+m[1]+'</span>'+(m[0]==='contact'?'<span class="badge hide">0</span>':'')+'</a>';}).join('');
+  navBadge();
+}
+var LASTV='';
+function draw(){
+  var m=MENU.filter(function(x){return x[0]===VIEW;})[0]||MENU[0];
+  $('#title').textContent=m[1];$('#sub').textContent=m[2]||'';
+  /* 같은 화면을 다시 그릴 때(순서 바꾸기·삭제 등)는 스크롤 위치와 누른 버튼을 그대로 유지 */
+  var b=$('#body'),key=VIEW+'|'+(EDIT||''),same=key===LASTV,y=b.scrollTop,wy=window.scrollY,fa=document.activeElement,fsel=null;
+  if(same&&fa&&b.contains(fa)){var at=['data-gm','data-mv','data-i','data-rm','data-gr','data-ed'].filter(function(n){return fa.hasAttribute(n);});
+    if(fa.hasAttribute('data-gm')||fa.hasAttribute('data-mv')){var ni=(+fa.getAttribute('data-i'))+(+(fa.getAttribute('data-gm')||fa.getAttribute('data-mv')));fsel='['+(fa.hasAttribute('data-gm')?'data-gm':'data-mv')+'="'+(fa.getAttribute('data-gm')||fa.getAttribute('data-mv'))+'"][data-i="'+ni+'"]';}}
+  LASTV=key;V[VIEW](b);drawNav();updBar();$('#savebar').style.display=(VIEW==='request'||VIEW==='pw')?'none':'';
+  if(same){b.scrollTop=y;window.scrollTo(0,wy);if(fsel){var el=b.querySelector(fsel);if(el&&!el.disabled)el.focus({preventScroll:true});}}
+  else b.scrollTop=0;
+}
+function route(){var h=(location.hash||'#home').slice(1);if(!V[h])h='home';if(h!==VIEW)EDIT=null;VIEW=h;TARGET=null;draw();}
+function segV(){$('#vseg').style.display='none';$('#vseg').innerHTML=['bw'].map(function(v){return '<button type="button" data-v="'+v+'" aria-pressed="'+(VAR===v)+'">'+({b:'B-K',bw:'B-W'}[v]||v.toUpperCase())+'</button>';}).join('');}
+
+/* ---------- 시작 ---------- */
+function start(){
+  if(PRACTICE){SAVED=lsGet(KEY)||{};LOADED=true;}
+  else{SAVED={};$('#body').innerHTML='<div class="empty">홈페이지 내용을 불러오는 중…</div>';
+    apiGet().then(function(c){delete c.updated;SAVED=c;DRAFT=clone(SAVED);LOADED=true;try{draw();}catch(e){showErr(['화면을 그리는 중 문제가 생겼어요. 새로 고침(Ctrl+Shift+R) 해 주세요.']);}preview(true);})
+     .catch(function(){showErr(['홈페이지 내용을 불러오지 못했어요. 인터넷 연결을 확인하고 새로 고침해 주세요. (불러오기 전에는 저장할 수 없어요)']);});
+    loadInbox();loadHist().then(function(){if(VIEW==='home'&&LOADED)draw();});}
+  DRAFT=clone(SAVED);
+  segV();
+  $('#vseg').addEventListener('click',function(e){var x=e.target.closest('[data-v]');if(!x)return;VAR=x.dataset.v;segV();preview(true);});
+  $('#dseg').addEventListener('click',function(e){var x=e.target.closest('[data-d]');if(!x)return;DEV=x.dataset.d;$('#dseg').querySelectorAll('button').forEach(function(y){y.setAttribute('aria-pressed',y===x);});fitFrame();});
+  $('#save').addEventListener('click',save);
+  $('#undo').addEventListener('click',function(){if(!confirm('저장하지 않은 바뀐 내용을 모두 되돌릴까요?'))return;DRAFT=clone(SAVED);EDIT=null;draw();preview(true);});
+  $('#openPrev').addEventListener('click',function(){$('#prev').classList.add('open');setTimeout(fitFrame,30);});
+  $('#closePrev').addEventListener('click',function(){$('#prev').classList.remove('open');});
+  window.addEventListener('hashchange',route);
+  window.addEventListener('resize',fitFrame);
+  window.addEventListener('storage',function(e){if(e.key===INBOX){navBadge();if(VIEW==='contact')draw();}});
+  window.addEventListener('beforeunload',function(e){if(dirty()){e.preventDefault();e.returnValue='';}});
+  if(window.innerWidth<=720){DEV='mob';$('#dseg').querySelectorAll('button').forEach(function(y){y.setAttribute('aria-pressed',y.dataset.d==='mob');});}
+  route();fitFrame();preview(true);
+}
+function boot(){
+  $('#login').classList.add('hide');$('#app').classList.remove('hide');
+  try{sessionStorage.setItem('sg_admin_in','1');}catch(e){}
+  var pf=$('#pf'),tries=0;
+  var started=false;
+  function ready(){var w=pw();if(started)return;if(w&&w.SG_DEFAULTS){started=true;DEF=w.SG_DEFAULTS();prepDef();start();}else if(++tries<60)setTimeout(ready,100);else $('#body').innerHTML='<div class="err">홈페이지를 불러오지 못했어요. 새로 고침해 주세요.</div>';}
+  pf.addEventListener('load',function(){if(pf.contentWindow&&pf.contentWindow.SG_DEFAULTS)ready();});
+  pf.src='index.html?preview&v='+Date.now();
+  setTimeout(fitFrame,50);
+}
+/* ---------- 비밀번호 ---------- */
+/* 연습 모드: 비밀번호는 이 브라우저에 암호화(해시)해서 저장. 서버 연결 후에는 서버(스크립트 속성)에 저장 */
+function sha(t){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(t)).then(function(h){return Array.prototype.map.call(new Uint8Array(h),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');});}
+function pwGet(){return lsGet(PWK);}
+function pwCheck(p){var r=pwGet();if(!r)return Promise.resolve(false);return sha(r.s+':'+p).then(function(h){return h===r.h;});}
+function pwSet(p){var s=Array.prototype.map.call(crypto.getRandomValues(new Uint8Array(12)),function(x){return ('0'+x.toString(16)).slice(-2);}).join('');return sha(s+':'+p).then(function(h){lsSet(PWK,{s:s,h:h});});}
+function relogin(){try{sessionStorage.removeItem('sg_pw');}catch(e){}toast('다시 로그인해 주세요.');setTimeout(function(){location.reload();},1200);}
+(function(){
+  var f=$('#pwForm'),setup=PRACTICE&&!pwGet(),er=$('#pwErr');
+  if(!PRACTICE){$('#loginNote').innerHTML='저장하면 홈페이지(sikgoons.kr)에 바로 반영됩니다. 처음 비밀번호는 제작사에서 받으신 <b>관리자 비밀번호</b>를 넣고, 들어간 뒤 <b>비밀번호 설정</b>에서 바꿔 주세요. (수정요청 접수 비밀번호와는 다릅니다)';$('#sideFoot').firstChild.textContent='저장하면 홈페이지에 바로 반영';}
+  if(setup){$('#pwMsg').textContent='처음 들어오셨어요. 관리자 비밀번호를 정해 주세요. (8자 이상)';$('#pw1L').textContent='새 비밀번호';$('#pw1').setAttribute('autocomplete','new-password');$('#pw2Row').hidden=false;$('#enter').textContent='비밀번호 정하고 들어가기';}
+  /* 비밀번호 보기 · 한글 입력 경고 · 앞뒤 빈칸 제거 */
+  $('#pwEye').addEventListener('click',function(){var i=$('#pw1'),on=i.type==='password';i.type=on?'text':'password';this.textContent=on?'숨기기':'보기';this.setAttribute('aria-pressed',on);this.setAttribute('aria-label',on?'비밀번호 숨기기':'비밀번호 보기');});
+  function hanChk(){$('#pwHan').hidden=!/[ㄱ-ㅎㅏ-ㅣ가-힣]/.test($('#pw1').value+($('#pw2')?$('#pw2').value:''));}
+  $('#pw1').addEventListener('input',hanChk);if($('#pw2'))$('#pw2').addEventListener('input',hanChk);
+  f.addEventListener('submit',function(e){e.preventDefault();
+    $('#pw1').value=$('#pw1').value.trim();if($('#pw2'))$('#pw2').value=$('#pw2').value.trim();hanChk();
+    if(!$('#pwHan').hidden){$('#pw1').focus();return;}
+    var p1=$('#pw1').value,lk=lsGet(PWK+'_lock')||{n:0,t:0};
+    if(setup){
+      if(p1.length<8){er.textContent='8자 이상으로 정해 주세요.';$('#pw1').focus();return;}
+      if(p1!==$('#pw2').value){er.textContent='두 칸의 비밀번호가 서로 달라요.';$('#pw2').focus();return;}
+      pwSet(p1).then(boot);return;
+    }
+    if(!PRACTICE){var bt=$('#enter');bt.disabled=true;bt.textContent='확인하는 중…';
+      PW=p1;rawApi({action:'login'}).then(function(j){bt.disabled=false;bt.textContent='관리자 페이지 들어가기';
+        if(j.ok){try{sessionStorage.setItem('sg_pw',p1);}catch(e){}boot();}else{er.textContent=j.error||'들어가지 못했어요.';$('#pw1').select();}})
+       .catch(function(){bt.disabled=false;bt.textContent='관리자 페이지 들어가기';er.textContent='서버에 연결하지 못했어요. 잠시 뒤 다시 해 주세요.';});
+      return;}
+    if(lk.t>Date.now()){er.textContent='비밀번호를 여러 번 틀려서 잠시 잠겼어요. '+Math.ceil((lk.t-Date.now())/60000)+'분 뒤에 다시 해 주세요.';return;}
+    pwCheck(p1).then(function(ok){
+      if(ok){localStorage.removeItem(PWK+'_lock');boot();return;}
+      lk.n++;if(lk.n>=5){lk={n:0,t:Date.now()+5*60000};}lsSet(PWK+'_lock',lk);
+      er.textContent=lk.t>Date.now()?'5번 틀려서 5분 동안 잠겼어요.':'비밀번호가 맞지 않아요.';$('#pw1').select();
+    });
+  });
+  setTimeout(function(){$('#pw1').focus();},50);
+})();
+try{if(PRACTICE){if(sessionStorage.getItem('sg_admin_in')&&pwGet())boot();}else if(sessionStorage.getItem('sg_pw')){PW=sessionStorage.getItem('sg_pw');rawApi({action:'login'}).then(function(j){if(j.ok)boot();else{PW='';try{sessionStorage.removeItem('sg_pw');}catch(_){}var er=$('#pwErr')||$('#pwMsg');if(er)er.textContent='비밀번호를 다시 넣어 주세요. ('+(j.error||'')+')';}}).catch(function(){boot();});}}catch(e){}
+})();
+</script>
+</body>
+</html>
