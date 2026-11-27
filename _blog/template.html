@@ -111,8 +111,15 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 
 /* ---------- horizontal strip ---------- */
 .strip{display:flex;gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:thin;padding-bottom:10px}
-.strip>*{flex:0 0 auto;scroll-snap-align:start;height:clamp(220px,30vw,420px)}
-.strip img{height:100%;width:auto;object-fit:cover}
+.strip>*{flex:0 0 auto;scroll-snap-align:start;height:clamp(150px,17vw,250px)}
+.strip img{cursor:zoom-in}
+.zv{position:fixed;inset:0;z-index:90;background:rgba(12,10,8,.94);display:none;align-items:center;justify-content:center}
+.zv.open{display:flex}
+.zv img{max-width:94vw;max-height:90vh;object-fit:contain}
+.zv button{position:absolute;color:#fff;width:56px;height:56px;font-size:34px;line-height:1}
+.zv .zx{right:10px;top:8px}.zv .zp{left:8px;top:50%;transform:translateY(-50%)}.zv .zn{right:8px;top:50%;transform:translateY(-50%)}
+.zv .zc{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:#fff;font-size:13px;opacity:.7}
+.strip img{height:clamp(150px,17vw,250px);width:auto;max-width:none;object-fit:cover}
 .strip-hint{font-size:12px;letter-spacing:.12em;opacity:.55;margin:0 0 12px}
 
 /* ---------- project page parts ---------- */
@@ -179,6 +186,12 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .fmsg{grid-column:1/-1;min-height:1.4em;font-size:14px}.fmsg.ok{color:#2f6b3f}.fmsg.err{color:#b3261e}
 .sms{display:none;max-width:880px;margin-top:28px;padding:22px;border:1px solid rgba(128,128,128,.35)}
 .sms.show{display:block}.sms p{font-size:14px;margin-bottom:14px}.sms .btn{margin:4px 6px 4px 0}
+.revs{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:18px}
+.rev{margin:0;padding:26px 24px;background:rgba(255,255,255,.55);border:1px solid rgba(128,128,128,.18)}
+.rev blockquote{font-size:15px;line-height:1.9;margin:0 0 16px}
+.rev figcaption{font-size:13px;opacity:.75}.rev figcaption span{opacity:.6;margin-left:6px}
+.pvhi{outline:3px solid #e8892b;outline-offset:6px}
+html.cwait #app{visibility:hidden}
 .ceo{margin-top:26px;opacity:.85}.ceo b{font-weight:500}.ceo ul{list-style:none;display:flex;flex-wrap:wrap;gap:6px 18px;margin-top:8px;font-size:14px;opacity:.8}.ceo li:before{content:'— ';opacity:.5}
 .hours{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 28px;max-width:880px;margin:0 0 34px;padding:22px 0;border-top:1px solid rgba(128,128,128,.3);border-bottom:1px solid rgba(128,128,128,.3);font-size:14px}
 .hours b{display:block;font-size:11px;letter-spacing:.14em;opacity:.55;font-weight:500;margin-bottom:4px}
