@@ -357,6 +357,7 @@ var MENU=[
   ['alert','상담 알림','상담이 들어오면 카톡을 받을 번호',1],
   ['blog','블로그','네이버 블로그 글이 자동으로 올라와요',0,0,'Blog'],
   ['cap','SETTINGS · 설정'],
+  ['request','수정 요청','제작사에 디자인·기능 수정 요청하기',0,0,'Request'],
   ['pw','비밀번호 설정','관리자 비밀번호 바꾸기',0,0,'Password']
 ];
 /* 제작사 수정요청 접수 화면 (고객 전용 주소, 들어갈 때 비밀번호 필요) */
@@ -538,6 +539,7 @@ MENU=[
   ['alert','상담 알림','상담이 들어오면 카톡을 받을 번호',1],
   ['blog','블로그','네이버 블로그 글이 자동으로 올라와요',0,0,'Blog'],
   ['cap','SETTINGS · 설정'],
+  ['request','수정 요청','제작사에 디자인·기능 수정 요청하기',0,0,'Request'],
   ['pw','비밀번호 설정','관리자 비밀번호 바꾸기',0,0,'Password']
 ];
 var TXL={
@@ -641,6 +643,25 @@ function workEdit(b,id){
   where(w.id,'');
 }
 
+
+var REQ_URL='https://motodna.github.io/onemill-request/?c=cef08e4a8ab61476';
+V.request=function(b){
+  var REQ_ORIGIN='https://motodna.github.io',REQ_C=(REQ_URL.match(/[?&]c=([^&#]+)/)||[])[1]||'';
+  b.innerHTML='<div class="card"><h3>제작사에 수정 요청하기</h3><p class="hint">글·사진·현장 목록·후기·상담 안내 문구처럼 이 관리자 페이지에서 직접 고칠 수 있는 것은 바로 고치시면 됩니다. '+
+   '그 밖에 <b>색·배치·메뉴 구성·새 기능</b>처럼 직접 고칠 수 없는 것은 아래 접수 화면에 남겨 주세요. 사진이나 캡처를 함께 올리실 수 있고, 진행 상태(접수 · 작업중 · 반영완료)도 여기서 확인하실 수 있습니다.</p>'+
+   '<ol class="hint" style="padding-left:18px;margin:0 0 14px"><li>관리자 페이지에 들어와 있으면 접수 화면에 <b>비밀번호 없이 바로</b> 들어갑니다.</li><li>어느 페이지의 무엇을 어떻게 바꾸고 싶은지 적고 보냅니다.</li><li>반영되면 상태가 “반영완료”로 바뀌고 답변이 달립니다.</li></ol>'+
+   '<button class="btn pri" type="button" id="reqOpen">접수 화면 새 창으로 열기 ↗</button></div>'+
+   '<div class="card" style="padding:0;overflow:hidden"><iframe id="reqFrame" src="'+REQ_URL+'" title="수정 요청 접수 화면" style="display:block;width:100%;height:860px;border:0"></iframe></div>';
+  // 서버에서 접수 비밀번호를 받아(관리자 로그인 상태에서만) 접수 화면이 "준비됨"을 알리면 건네준다
+  var reqPw=null,fr=b.querySelector('#reqFrame'),wins=[];
+  function hand(w){if(reqPw&&w){try{w.postMessage({type:'onemill-pw',c:REQ_C,pw:reqPw},REQ_ORIGIN);}catch(e){}}}
+  if(!PRACTICE){api({action:'reqpw'}).then(function(j){if(j&&j.ok&&j.pw){reqPw=j.pw;hand(fr.contentWindow);wins.forEach(hand);}}).catch(function(){});}
+  if(window._reqMsg)window.removeEventListener('message',window._reqMsg);
+  window._reqMsg=function(e){if(e.origin!==REQ_ORIGIN||!e.data||e.data.type!=='onemill-ready')return;if(wins.indexOf(e.source)<0)wins.push(e.source);hand(e.source);};
+  window.addEventListener('message',window._reqMsg);
+  b.querySelector('#reqOpen').addEventListener('click',function(){var w=window.open(REQ_URL,'_blank');if(!w)location.href=REQ_URL;});
+  where('','');
+};
 
 /* ---------- 블로그 (자동) ---------- */
 V.blog=function(b){
