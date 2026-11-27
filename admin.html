@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="img/logo-mark-dark.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500&family=Noto+Serif+KR:wght@400&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500&family=Noto+Sans+KR:wght@400;500&family=Noto+Serif+KR:wght@400&display=swap">
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%}
@@ -221,6 +221,20 @@ body.dragging,body.dragging *{cursor:grabbing!important;user-select:none}
 .pbig.empty{display:grid;place-items:center;color:#8A8277;font-size:13px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
 @media(max-width:640px){.pslots,.grid2{grid-template-columns:1fr}.wrow{flex-wrap:wrap}.wrow .ctl{width:100%}}
+
+/* 홈페이지와 같은 메뉴 */
+.side .brand .lg{display:block;height:34px;width:auto;margin-bottom:6px}
+.vh{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.nav .cap{font-size:10.5px;letter-spacing:.18em;margin:20px 12px 8px}
+.nav a{justify-content:flex-start;gap:10px;min-height:46px}
+.nav a .en{font-family:'Cormorant Garamond',serif;font-size:19px;letter-spacing:.06em;min-width:74px;color:#F4EFE7}
+.nav a .ko{font-size:12.5px;color:#A79E92;letter-spacing:.02em;flex:1}
+.nav a.sub{min-height:38px;padding-left:22px}
+.nav a.sub .dot{color:#6E665C;font-size:12px;min-width:16px}
+.nav a.sub .ko{font-size:13px;color:#CFC8BE}
+.nav a[aria-current=page] .en,.nav a[aria-current=page] .ko,.nav a[aria-current=page] .dot{color:#1C1A18}
+#title .ten{font-family:'Cormorant Garamond',serif;font-weight:400;font-size:1.25em;letter-spacing:.06em;margin-right:10px;color:#8A7A62}
+@media(max-width:720px){.nav a .en{font-size:16px;min-width:0}.nav a .ko{flex:none}.nav a.sub{padding-left:12px}.nav a.sub .dot{display:none}}
 </style>
 </head>
 <body>
@@ -244,7 +258,7 @@ body.dragging,body.dragging *{cursor:grabbing!important;user-select:none}
 
 <div class="app hide" id="app">
   <aside class="side">
-    <div class="brand"><b>SIKGOONS</b><span>홈페이지 관리자</span></div>
+    <div class="brand"><img src="img/logo-full-white.png" alt="SIKGOONS" class="lg"><b class="vh">SIKGOONS</b><span>홈페이지 관리자</span></div>
     <nav class="nav" id="nav" aria-label="관리 메뉴"></nav>
     <div class="foot" id="sideFoot">연습 모드 · 이 브라우저에만 저장<br><a href="./" target="_blank" rel="noopener">홈페이지 새 창으로 보기 ↗</a></div>
   </aside>
@@ -333,21 +347,17 @@ var BANDS=[['30','30평대'],['40','40평대'],['50','50평대'],['60','60평 �
 
 /* 메뉴: 홈페이지와 같은 순서 */
 var MENU=[
-  ['home','한눈에 보기','현재 상태와 저장 기록'],
-  ['cap','홈페이지 메뉴'],
-  ['hero','메인 슬라이드','첫 화면 조명 사진(꺼짐·켜짐)의 장수와 순서'],
-  ['homephotos','메인 사진','ABOUT 페이지의 Works 사진 · Before / After · 조명 사진'],
-  ['about','ABOUT','회사 소개 · 대표 디자이너 · 진행 절차'],
-  ['works','WORKS','포트폴리오 현장 목록과 사진'],
-  ['contact','CONTACT','연락처 · 상담 안내 · 상담 접수함'],
-  ['alert','상담 알림','상담이 들어오면 카톡·문자를 받을 번호'],
-  ['youtube','YOUTUBE','유튜브 채널 주소'],
-  ['blog','BLOG','블로그 주소'],
-  ['instagram','INSTAGRAM','인스타그램 주소'],
-  ['cap','그 밖에'],
-  ['texts','홈페이지 문구','첫 화면 문구 · 회사 정보'],
-  ['request','수정 요청','디자인·기능 수정을 제작사(디엔에이랩스)에 요청하기'],
-  ['pw','비밀번호 설정','관리자 비밀번호 바꾸기']
+  ['home','한눈에 보기','현재 상태와 저장 기록',0,0,'Overview'],
+  ['cap','HOMEPAGE · 홈페이지 메뉴'],
+  ['hero','첫 화면','메인 슬라이드 사진과 큰 제목',0,0,'Home'],
+  ['about','소개','회사 소개 · 대표 디자이너 · 숫자 4칸',0,0,'About'],
+  ['reviews','고객 후기','메인과 소개 페이지에 나오는 후기',1],
+  ['works','시공 사례','현장 목록 · 현장별 글과 사진',0,0,'Works'],
+  ['contact','상담','상담 안내 문구 · 받은 상담',0,0,'Contact'],
+  ['alert','상담 알림','상담이 들어오면 카톡을 받을 번호',1],
+  ['blog','블로그','네이버 블로그 글이 자동으로 올라와요',0,0,'Blog'],
+  ['cap','SETTINGS · 설정'],
+  ['pw','비밀번호 설정','관리자 비밀번호 바꾸기',0,0,'Password']
 ];
 /* 제작사 수정요청 접수 화면 (고객 전용 주소, 들어갈 때 비밀번호 필요) */
 var REQ_URL='https://motodna.github.io/onemill-request/?c=cbe739d89d18342a';
@@ -518,16 +528,17 @@ V.home=function(b){
 
 /* ================= 식군스 전용 ================= */
 MENU=[
-  ['home','한눈에 보기','현재 상태와 저장 기록'],
-  ['cap','홈페이지 메뉴'],
-  ['hero','첫 화면','메인 슬라이드 사진과 큰 제목'],
-  ['works','시공 사례','현장 목록 · 현장별 글과 사진'],
-  ['reviews','고객 후기','메인과 소개 페이지에 나오는 후기'],
-  ['about','소개','회사 소개 · 대표 디자이너 · 숫자 4칸'],
-  ['contact','상담','상담 안내 문구 · 받은 상담'],
-  ['alert','상담 알림','상담이 들어오면 카톡·문자를 받을 번호'],
-  ['cap','그 밖에'],
-  ['pw','비밀번호 설정','관리자 비밀번호 바꾸기']
+  ['home','한눈에 보기','현재 상태와 저장 기록',0,0,'Overview'],
+  ['cap','HOMEPAGE · 홈페이지 메뉴'],
+  ['hero','첫 화면','메인 슬라이드 사진과 큰 제목',0,0,'Home'],
+  ['about','소개','회사 소개 · 대표 디자이너 · 숫자 4칸',0,0,'About'],
+  ['reviews','고객 후기','메인과 소개 페이지에 나오는 후기',1],
+  ['works','시공 사례','현장 목록 · 현장별 글과 사진',0,0,'Works'],
+  ['contact','상담','상담 안내 문구 · 받은 상담',0,0,'Contact'],
+  ['alert','상담 알림','상담이 들어오면 카톡을 받을 번호',1],
+  ['blog','블로그','네이버 블로그 글이 자동으로 올라와요',0,0,'Blog'],
+  ['cap','SETTINGS · 설정'],
+  ['pw','비밀번호 설정','관리자 비밀번호 바꾸기',0,0,'Password']
 ];
 var TXL={
   heroT:{l:'큰 제목 (엔터 = 줄바꿈)',page:'home',at:'#tHero'},heroS:{l:'작은 문구',one:1,page:'home',at:'#tHero'},
@@ -630,6 +641,14 @@ function workEdit(b,id){
   where(w.id,'');
 }
 
+
+/* ---------- 블로그 (자동) ---------- */
+V.blog=function(b){
+  b.innerHTML='<div class="card"><h3>블로그는 자동으로 올라와요</h3><p class="hint" style="margin-bottom:0">네이버 블로그(blog.naver.com/ff9302)에 글을 올리면 3시간 안에 홈페이지 <b>Blog</b> 메뉴에 저절로 나타나요. 관리자 페이지에서 따로 하실 일은 없어요.</p></div>'+
+  '<div class="card"><h3>바로 가기</h3><div class="row"><a class="btn" href="https://blog.naver.com/ff9302" target="_blank" rel="noopener">네이버 블로그 열기 ↗</a><a class="btn" href="/blog/" target="_blank" rel="noopener">홈페이지 Blog 보기 ↗</a></div>'+
+  '<p class="hint" style="margin-top:12px">글을 지우거나 고치는 것도 네이버 블로그에서 하시면 홈페이지에 같이 반영돼요.</p></div>';
+  where('home','');
+};
 /* ---------- 고객 후기 ---------- */
 V.reviews=function(b){
   var R=revs();
@@ -748,13 +767,13 @@ V.pw=function(b){
 function navBadge(){var n=inb().filter(function(x){return !x.done;}).length,a=$('#nav a[href="#contact"] .badge');if(a){a.textContent=n;a.classList.toggle('hide',!n);}}
 function drawNav(){
   $('#nav').innerHTML=MENU.map(function(m){if(m[0]==='cap')return '<div class="cap">'+m[1]+'</div>';
-    return '<a href="#'+m[0]+'"'+(VIEW===m[0]?' aria-current="page"':'')+'><span>'+m[1]+'</span>'+(m[0]==='contact'?'<span class="badge hide">0</span>':'')+'</a>';}).join('');
+    return '<a href="#'+m[0]+'"'+(m[3]?' class="sub"':'')+(VIEW===m[0]?' aria-current="page"':'')+'>'+(m[5]?'<span class="en">'+m[5]+'</span>':'<span class="dot" aria-hidden="true">└</span>')+'<span class="ko">'+m[1]+'</span>'+(m[0]==='contact'?'<span class="badge hide">0</span>':'')+'</a>';}).join('');
   navBadge();
 }
 var LASTV='';
 function draw(){
   var m=MENU.filter(function(x){return x[0]===VIEW;})[0]||MENU[0];
-  $('#title').textContent=m[1];$('#sub').textContent=m[2]||'';
+  $('#title').innerHTML=(m[5]?'<span class="ten">'+m[5]+'</span>':'')+esc(m[1]);$('#sub').textContent=m[2]||'';
   /* 같은 화면을 다시 그릴 때(순서 바꾸기·삭제 등)는 스크롤 위치와 누른 버튼을 그대로 유지 */
   var b=$('#body'),key=VIEW+'|'+(EDIT||''),same=key===LASTV,y=b.scrollTop,wy=window.scrollY,fa=document.activeElement,fsel=null;
   if(same&&fa&&b.contains(fa)){var at=['data-gm','data-mv','data-i','data-rm','data-gr','data-ed'].filter(function(n){return fa.hasAttribute(n);});
